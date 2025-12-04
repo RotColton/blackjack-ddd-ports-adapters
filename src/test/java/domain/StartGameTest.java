@@ -4,29 +4,18 @@ import game.domain.model.Game;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-
-
-import javax.naming.directory.InvalidAttributeValueException;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StartGameTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    @ValueSource(strings = {"  ", "\t", "\n"})
-    void shouldNotStartGameWithoutValidPlayerName(String playerName) throws InvalidAttributeValueException {
+    @ValueSource(strings = {"  ", "\t", "\n", "st","0123456789"})
+    void shouldNotStartGameWithoutValidPlayerName(String playerName){
 
-        Exception exception = assertThrows(InvalidAttributeValueException.class,
+        Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> Game.startGame(playerName));
-
-        String expectedMessage = "Invalid Player Name";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
     }
-
 
 
 
