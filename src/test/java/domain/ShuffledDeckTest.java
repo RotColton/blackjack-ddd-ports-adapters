@@ -20,7 +20,6 @@ public class ShuffledDeckTest {
 
     @Test
     void shouldContainAll52Cards() {
-        Deck deck = Deck.shuffle();
         Set<Card> deckCards = new HashSet<>(Deck.shuffle().asList());
 
         Set<Card> expectedCards = Arrays.stream(Suit.values())
