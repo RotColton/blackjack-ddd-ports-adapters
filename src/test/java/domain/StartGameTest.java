@@ -16,7 +16,7 @@ public class StartGameTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"  ", "\t", "\n"})
-    void cannotStartGameWithoutValidPlayerName(String playerName) throws InvalidAttributeValueException {
+    void shouldNotStartGameWithoutValidPlayerName(String playerName) throws InvalidAttributeValueException {
 
         Exception exception = assertThrows(InvalidAttributeValueException.class,
                 () -> Game.startGame(playerName));
