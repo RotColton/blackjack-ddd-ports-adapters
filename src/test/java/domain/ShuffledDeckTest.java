@@ -6,10 +6,7 @@ import game.domain.model.Suit;
 import game.domain.model.Value;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -20,7 +17,7 @@ public class ShuffledDeckTest {
 
     @Test
     void shouldContainAll52Cards() {
-        Set<Card> deckCards = new HashSet<>(Deck.shuffle().asList());
+        Set<Card> deckCards = new HashSet<>(Deck.shuffle().asLinkedHashSet());
 
         Set<Card> expectedCards = Arrays.stream(Suit.values())
                 .flatMap(suit -> Arrays.stream(Value.values())
@@ -33,8 +30,8 @@ public class ShuffledDeckTest {
 
     @Test
     void shouldReturnDifferentOrderAfterShuffle() {
-        List<Card> firstDeck = Deck.shuffle().asList();
-        List<Card> secondDeck = Deck.shuffle().asList();
+        List<Card> firstDeck = Deck.shuffle().asLinkedHashSet().stream().toList();
+        List<Card> secondDeck = Deck.shuffle().asLinkedHashSet().stream().toList();
 
         boolean isDifferent = IntStream.range(0, firstDeck.size())
                 .anyMatch(i -> !firstDeck.get(i).equals(secondDeck.get(i)));
