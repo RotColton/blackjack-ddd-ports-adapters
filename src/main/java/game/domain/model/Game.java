@@ -1,7 +1,5 @@
 package game.domain.model;
 
-
-import javax.naming.directory.InvalidAttributeValueException;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -10,6 +8,7 @@ public class Game {
     private final Deck deck;
     private Hand playerHand;
     private Hand dealerHand;
+
 
     private Game(PlayerName playerName, Deck deck, Hand playerHand, Hand dealerHand ) {
         this.playerName = playerName;
@@ -24,20 +23,24 @@ public class Game {
         Hand dealerHand = new Hand(new LinkedHashSet<Card>());
         Game game = new Game(PlayerName.of(playerName),deck, playerHand, dealerHand);
 
-        game.dealDealerOpeningCards();
-        game.dealPlayerOpeningCards();
+        game.dealOpeningCards();
 
         return game;
     }
 
-    private void dealDealerOpeningCards(){
-        dealerHand.addCard(deck.drawCard());
+    private void dealDealerCards(){
         dealerHand.addCard(deck.drawCard());
     }
 
-    private void dealPlayerOpeningCards(){
+    private void dealPlayerCards(){
         playerHand.addCard(deck.drawCard());
-        playerHand.addCard(deck.drawCard());
+    }
+
+    private void dealOpeningCards(){
+        dealPlayerCards();
+        dealDealerCards();
+        dealPlayerCards();
+        dealDealerCards();
     }
 
     public List<Card> playerHand(){
@@ -52,5 +55,8 @@ public class Game {
         return List.copyOf(deck.asList());
     }
 
+    public boolean playerHasBlackJack(){
+        return playerHand.isBlackJack();
+    }
 
 }

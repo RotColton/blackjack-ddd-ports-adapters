@@ -1,15 +1,31 @@
 package domain;
 
-import game.domain.model.Game;
+import game.domain.model.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.stubbing.Answer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 public class StartGameTest {
+
+    private Game game;
+
+    @BeforeEach
+    void setUp(){
+        game = Game.start("Pepito");
+    }
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -22,15 +38,11 @@ public class StartGameTest {
 
     @Test
     void shouldDealtTwoCardsToThePlayerAndTwoToTheDealer(){
-        Game game = Game.start("Pepito");
 
         assertEquals(2, game.playerHand().size());
         assertEquals(2, game.dealerHand().size());
         assertEquals(48, game.deck().size());
 
     }
-
-
-
 
 }
