@@ -30,8 +30,8 @@ public class Deck {
         return cards.size();
     }
 
-    public LinkedHashSet<Card> asLinkedHashSet() {
-        return cards;
+    public List<Card> asList() {
+        return List.copyOf(cards);
     }
 
     public Card drawCard() {

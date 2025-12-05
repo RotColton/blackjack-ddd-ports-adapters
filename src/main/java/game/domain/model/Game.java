@@ -40,16 +40,16 @@ public class Game {
         playerHand.addCard(deck.drawCard());
     }
 
-    public List playerHand(){
+    public List<Card> playerHand(){
         return List.copyOf(playerHand.cards());
     }
 
-    public List dealerHand(){
+    public List<Card> dealerHand(){
         return List.copyOf(dealerHand.cards());
     }
 
-    public List deck(){
-        return List.copyOf(deck.asLinkedHashSet());
+    public List<Card> deck(){
+        return List.copyOf(deck.asList());
     }
 
 

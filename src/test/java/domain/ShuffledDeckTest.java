@@ -17,7 +17,7 @@ public class ShuffledDeckTest {
 
     @Test
     void shouldContainAll52Cards() {
-        Set<Card> deckCards = new HashSet<>(Deck.shuffle().asLinkedHashSet());
+        Set<Card> deckCards = new HashSet<>(Deck.shuffle().asList());
 
         Set<Card> expectedCards = Arrays.stream(Suit.values())
                 .flatMap(suit -> Arrays.stream(Value.values())
@@ -30,8 +30,8 @@ public class ShuffledDeckTest {
 
     @Test
     void shouldReturnDifferentOrderAfterShuffle() {
-        List<Card> firstDeck = Deck.shuffle().asLinkedHashSet().stream().toList();
-        List<Card> secondDeck = Deck.shuffle().asLinkedHashSet().stream().toList();
+        List<Card> firstDeck = Deck.shuffle().asList();
+        List<Card> secondDeck = Deck.shuffle().asList();
 
         boolean isDifferent = IntStream.range(0, firstDeck.size())
                 .anyMatch(i -> !firstDeck.get(i).equals(secondDeck.get(i)));
