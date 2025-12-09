@@ -1,22 +1,11 @@
-package domain;
-
-import game.domain.model.*;
+import game.application.domain.model.Game;
+import game.application.domain.model.PlayerName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.stubbing.Answer;
-
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.stream.Stream;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 
 public class StartGameTest {
 
@@ -24,7 +13,7 @@ public class StartGameTest {
 
     @BeforeEach
     void setUp(){
-        game = Game.start("Pepito");
+        game = Game.start(PlayerName.of("Pepito"));
     }
 
     @ParameterizedTest
@@ -33,7 +22,7 @@ public class StartGameTest {
     void shouldNotStartGameWithoutValidPlayerName(String playerName){
 
         Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> Game.start(playerName));
+                () -> Game.start(PlayerName.of(playerName)));
     }
 
     @Test

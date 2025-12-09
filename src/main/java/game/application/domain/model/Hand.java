@@ -1,8 +1,9 @@
-package game.domain.model;
+package game.application.domain.model;
 
 import java.util.LinkedHashSet;
 
-public record Hand(LinkedHashSet<Card> cards) {
+public record Hand(
+        LinkedHashSet<Card> cards) {
 
     private static final short BLACKJACK = 21;
 
@@ -19,14 +20,12 @@ public record Hand(LinkedHashSet<Card> cards) {
                 .filter(c -> c.value() == Value.ACE)
                 .count();
 
-        while(aces > 0){
-            if(total+10 <= 21)
-                total+=10;
+        while(aces > 0 && total+10 <=21){
+            total+=10;
             aces--;
-
         }
-        return total;
 
+        return total;
     }
 
     public boolean isBlackJack() {

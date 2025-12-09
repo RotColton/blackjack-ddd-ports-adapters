@@ -1,4 +1,4 @@
-package game.domain.model;
+package game.application.domain.model;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -17,11 +17,11 @@ public class Game {
         this.dealerHand = dealerHand;
     }
 
-    public static Game start(String playerName){
+    public static Game start(PlayerName playerName){
         Deck deck = Deck.shuffle();
         Hand playerHand = new Hand(new LinkedHashSet<Card>());
         Hand dealerHand = new Hand(new LinkedHashSet<Card>());
-        Game game = new Game(PlayerName.of(playerName),deck, playerHand, dealerHand);
+        Game game = new Game(playerName,deck, playerHand, dealerHand);
 
         game.dealOpeningCards();
 

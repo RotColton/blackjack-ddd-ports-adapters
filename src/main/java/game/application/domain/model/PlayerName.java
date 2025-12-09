@@ -1,4 +1,4 @@
-package game.domain.model;
+package game.application.domain.model;
 
 public class PlayerName {
     private String value;

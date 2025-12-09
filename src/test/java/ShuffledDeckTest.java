@@ -1,9 +1,7 @@
-package domain;
-
-import game.domain.model.Card;
-import game.domain.model.Deck;
-import game.domain.model.Suit;
-import game.domain.model.Value;
+import game.application.domain.model.Card;
+import game.application.domain.model.Deck;
+import game.application.domain.model.Suit;
+import game.application.domain.model.Value;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

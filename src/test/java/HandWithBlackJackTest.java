@@ -1,19 +1,18 @@
-package domain;
-
-import game.domain.model.Card;
-import game.domain.model.Hand;
-import game.domain.model.Suit;
-import game.domain.model.Value;
+import game.application.domain.model.Card;
+import game.application.domain.model.Hand;
+import game.application.domain.model.Suit;
+import game.application.domain.model.Value;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
 
 import java.util.LinkedHashSet;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HandTest {
+public class HandWithBlackJackTest {
 
     static Stream<Arguments> blackJackHandsWithTwoCards() {
         return Stream.of(

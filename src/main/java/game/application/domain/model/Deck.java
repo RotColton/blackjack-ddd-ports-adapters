@@ -1,4 +1,4 @@
-package game.domain.model;
+package game.application.domain.model;
 
 import java.util.Arrays;
 import java.util.Collections;
