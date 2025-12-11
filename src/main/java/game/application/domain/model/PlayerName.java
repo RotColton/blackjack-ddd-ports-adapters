@@ -1,23 +1,23 @@
 package game.application.domain.model;
 
-public class PlayerName {
-    private String value;
+public record PlayerName(String name) {
 
-    private PlayerName(String value){
-        this.value = value;
+
+    public static PlayerName of(String name) {
+        validate(name);
+        return new PlayerName(name);
     }
 
-    public static PlayerName of(String value) {
-        validate(value);
-        return new PlayerName(value);
-    }
-
-    private static void validate(String value){
-        if(value == null || value.isBlank()){
+    private static void validate(String name){
+        if(name == null || name.isBlank()){
             throw new IllegalArgumentException("Player name cannot be blank");
         }
-        if (value.length() < 3 || value.length() > 9) {
+        if (name.length() < 3 || name.length() > 9) {
             throw new IllegalArgumentException("Player name must be between 3 and 20 characters");
         }
+    }
+
+    public String name() {
+        return this.name;
     }
 }

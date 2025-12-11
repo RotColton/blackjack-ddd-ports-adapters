@@ -2,15 +2,18 @@ package game.application.domain.model;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.UUID;
 
 public class Game {
+    private final UUID id;
     private final PlayerName playerName;
     private final Deck deck;
-    private Hand playerHand;
-    private Hand dealerHand;
+    private final Hand playerHand;
+    private final Hand dealerHand;
 
 
-    private Game(PlayerName playerName, Deck deck, Hand playerHand, Hand dealerHand ) {
+    private Game(UUID id, PlayerName playerName, Deck deck, Hand playerHand, Hand dealerHand ) {
+        this.id = id;
         this.playerName = playerName;
         this.deck = deck;
         this.playerHand = playerHand;
@@ -21,7 +24,7 @@ public class Game {
         Deck deck = Deck.shuffle();
         Hand playerHand = new Hand(new LinkedHashSet<Card>());
         Hand dealerHand = new Hand(new LinkedHashSet<Card>());
-        Game game = new Game(playerName,deck, playerHand, dealerHand);
+        Game game = new Game(UUID.randomUUID(), playerName,deck, playerHand, dealerHand);
 
         game.dealOpeningCards();
 
@@ -43,6 +46,14 @@ public class Game {
         dealDealerCards();
     }
 
+    public UUID id(){
+        return this.id;
+    }
+
+    public PlayerName playerName(){
+        return this.playerName;
+    }
+
     public List<Card> playerHand(){
         return List.copyOf(playerHand.cards());
     }
@@ -57,6 +68,10 @@ public class Game {
 
     public boolean playerHasBlackJack(){
         return playerHand.isBlackJack();
+    }
+
+    public Card dealerUpcard() {
+        return dealerHand.cards().stream().findFirst().orElse(null);
     }
 
 }

@@ -1,7 +1,5 @@
-import game.application.domain.model.Card;
-import game.application.domain.model.Hand;
-import game.application.domain.model.Suit;
-import game.application.domain.model.Value;
+package game.application.domain.model;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
