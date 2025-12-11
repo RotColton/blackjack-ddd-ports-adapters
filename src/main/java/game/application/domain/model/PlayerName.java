@@ -13,7 +13,7 @@ public record PlayerName(String name) {
             throw new IllegalArgumentException("Player name cannot be blank");
         }
         if (name.length() < 3 || name.length() > 9) {
-            throw new IllegalArgumentException("Player name must be between 3 and 20 characters");
+            throw new IllegalArgumentException("Player name must be between 3 and 9 characters");
         }
     }
 

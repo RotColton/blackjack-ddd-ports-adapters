@@ -47,4 +47,68 @@ public class StartGameRestAdapterTest {
         );
     }
 
+    @Test
+    void shouldReturn400WhenPlayerNameIsTooShort() throws Exception{
+
+        StartGameRequest request = new StartGameRequest("Ro");
+
+        mockMvc.perform(post("/games/start")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void shouldReturn400WhenPlayerNameIsBlank() throws Exception{
+
+        StartGameRequest request = new StartGameRequest(" ");
+
+        mockMvc.perform(post("/games/start")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void shouldReturn400WhenPlayerNameIsNull() throws Exception{
+
+        StartGameRequest request = new StartGameRequest(null);
+
+        mockMvc.perform(post("/games/start")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void shouldReturn400WhenPlayerNameIsEmpty() throws Exception{
+
+        StartGameRequest request = new StartGameRequest("");
+
+        mockMvc.perform(post("/games/start")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void shouldReturn400WhenPlayerNameIsTooLarge() throws Exception{
+
+        StartGameRequest request = new StartGameRequest("0123456789");
+
+        mockMvc.perform(post("/games/start")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+
+
+
+
 }
