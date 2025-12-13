@@ -13,7 +13,8 @@ public class StartGameRestMapper {
                 game.id(),
                 game.playerName(),
                 game.playerHand(),
-                game.dealerHand().get(0)
+                game.dealerHand().get(0),
+                game.status()
         );
     }
 }

@@ -44,13 +44,13 @@ public class StartGameRestAdapterTest {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody(StartGameResponse.class)
-                .value(game -> {
-                    assert game != null;
-                    assertEquals(this.game.id(), game.gameID());
-                    assertEquals(this.game.playerName(), game.playerName());
-                    assertEquals(this.game.playerHand(), game.playerHand());
-                    assertEquals(this.game.dealerHand(), game.dealerHand());
-                    assertEquals(this.game.deck(), game.deck());
+                .value(gameResponse -> {
+                    assert gameResponse != null;
+                    assertEquals(game.id(), gameResponse.gameID());
+                    assertEquals(game.playerName(), gameResponse.playerName());
+                    assertEquals(game.playerHand(), gameResponse.playerHand());
+                    assertEquals(game.dealerHand().get(0), gameResponse.upCard());
+                    assertEquals(game.status(), gameResponse.status());
                 });
     }
 
