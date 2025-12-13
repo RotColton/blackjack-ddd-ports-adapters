@@ -4,7 +4,6 @@ public record PlayerName(
         String name
 ) {
 
-
     public static PlayerName of(String name) {
         validate(name);
         return new PlayerName(name);

@@ -2,7 +2,7 @@ package game.application.out;
 
 import game.application.domain.model.Game;
 
-public interface GameSaverPort {
+public interface SaveGamePort {
 
     Game save(Game game);
 

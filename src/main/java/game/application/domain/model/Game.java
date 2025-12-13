@@ -124,8 +124,6 @@ public class Game extends AbstractAggregateRoot<Game> {
                 status);
     }
 
-
-
     public boolean hasPlayerBlackJack() {
         return playerHand.isBlackJack();
     }
@@ -133,4 +131,11 @@ public class Game extends AbstractAggregateRoot<Game> {
     public Collection<Object> events(){
         return List.copyOf(super.domainEvents());
     }
+
+    public Game playerHit(){
+        if(status == GameStatus.IN_PROGRESS && playerHand.score() < 21)
+            dealPlayerCards();
+        return this;
+    }
+
 }

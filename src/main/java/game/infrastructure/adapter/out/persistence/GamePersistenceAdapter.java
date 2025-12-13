@@ -1,8 +1,8 @@
 package game.infrastructure.adapter.out.persistence;
 
 import game.application.domain.model.*;
-import game.application.out.GameSaverPort;
-import game.application.out.GetGameByPlayerName;
+import game.application.out.SaveGamePort;
+import game.application.out.SearchGamePort;
 import game.infrastructure.adapter.out.persistence.mapper.GamePersistenceMapper;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +13,8 @@ import java.util.UUID;
 
 @Component
 public class GamePersistenceAdapter implements
-        GameSaverPort,
-        GetGameByPlayerName {
+        SaveGamePort,
+        SearchGamePort {
 
     private final GameMongoRepository repository;
     private final GamePersistenceMapper mapper;
@@ -42,6 +42,11 @@ public class GamePersistenceAdapter implements
                         Hand.from(new LinkedHashSet<>(Optional.ofNullable(document.getDealerHand()).orElse(Collections.emptyList()))),
                         document.getStatus()
                 ));
+    }
+
+    @Override
+    public Optional<Game> getGameById(GameID id) {
+        return Optional.ofNullable(mapper.toDomain(repository.findById(id.id()).get()));
     }
 
 }
