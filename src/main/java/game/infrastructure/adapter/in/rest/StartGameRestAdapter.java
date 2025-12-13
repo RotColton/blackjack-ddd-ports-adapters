@@ -4,9 +4,9 @@ import game.application.domain.model.Game;
 import game.application.domain.model.PlayerName;
 import game.application.in.StartGameCommand;
 import game.application.in.StartGameUseCase;
-import game.infrastructure.adapter.in.rest.mapper.StartGameRestMapper;
+import game.infrastructure.adapter.in.rest.mapper.GameRestMapper;
 import game.infrastructure.adapter.in.rest.request.StartGameRequest;
-import game.infrastructure.adapter.in.rest.response.StartGameResponse;
+import game.infrastructure.adapter.in.rest.response.GameResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +26,13 @@ public class StartGameRestAdapter {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<StartGameResponse> startGame(
+    public ResponseEntity<GameResponse> startGame(
             @Valid @RequestBody StartGameRequest request) {
 
         Game game = startGameUseCase.startGame(
                 new StartGameCommand(PlayerName.of(request.playerName())));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(StartGameRestMapper.toResponse(game));
+        return ResponseEntity.status(HttpStatus.CREATED).body(GameRestMapper.toResponse(game));
 
     }
 

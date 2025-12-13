@@ -1,15 +1,15 @@
 package game.infrastructure.adapter.in.rest.mapper;
 
 import game.application.domain.model.Game;
-import game.infrastructure.adapter.in.rest.response.StartGameResponse;
+import game.infrastructure.adapter.in.rest.response.GameResponse;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StartGameRestMapper {
+public class GameRestMapper {
 
-    public static StartGameResponse toResponse(Game game) {
+    public static GameResponse toResponse(Game game) {
 
-        return new StartGameResponse(
+        return new GameResponse(
                 game.id(),
                 game.playerName(),
                 game.playerHand(),

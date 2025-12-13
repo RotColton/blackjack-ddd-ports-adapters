@@ -1,4 +1,4 @@
-package game.infrastructure.adapter.in.rest;
+package game.infrastructure.adapter.in.rest.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +9,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleIllegalArgument(IllegalStateException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }

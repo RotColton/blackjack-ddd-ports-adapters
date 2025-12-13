@@ -1,8 +1,7 @@
 package game.infrastructure.adapter.out.persistence;
 
 import game.application.domain.model.*;
-import game.application.out.SaveGamePort;
-import game.application.out.SearchGamePort;
+import game.application.out.GameOutputPort;
 import game.infrastructure.adapter.out.persistence.mapper.GamePersistenceMapper;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +9,7 @@ import java.util.Optional;
 
 
 @Component
-public class GamePersistenceAdapter implements
-        SaveGamePort,
-        SearchGamePort {
+public class GamePersistenceAdapter implements GameOutputPort {
 
     private final GameMongoRepository repository;
     private final GamePersistenceMapper mapper;
@@ -24,9 +21,12 @@ public class GamePersistenceAdapter implements
 
     @Override
     public Game save(Game game) {
-        if(game.status() == GameStatus.IN_PROGRESS)
-            return mapper.toDomain(repository.save(mapper.toDocument(game)));
-        else return game;
+        return mapper.toDomain(repository.save(mapper.toDocument(game)));
+    }
+
+    @Override
+    public Game update(Game game) {
+        return save(game);
     }
 
     @Override
@@ -36,8 +36,8 @@ public class GamePersistenceAdapter implements
     }
 
     @Override
-    public Optional<Game> getGameById(GameID id) {
-        return repository.findById(id.id())
+    public Optional<Game> getGameById(GameID gameID) {
+        return repository.findById(gameID.id().toString())
                 .map(mapper::toDomain);
     }
 

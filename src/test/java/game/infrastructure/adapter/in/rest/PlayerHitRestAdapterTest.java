@@ -4,6 +4,7 @@ import game.application.domain.model.Game;
 import game.application.domain.model.PlayerName;
 import game.application.in.PlayerHitCommand;
 import game.application.in.PlayerHitUseCase;
+import game.infrastructure.adapter.in.rest.response.GameResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,11 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class PlayerHitRestAdapter {
-/*
+public class PlayerHitRestAdapterTest {
+
     RestTestClient restTestClient;
     PlayerHitUseCase useCase;
-   // PlayerHitRequest request;
     Game game;
 
 
@@ -30,17 +30,18 @@ public class PlayerHitRestAdapter {
     @Test
     void shouldPlayerHitAndReturn200() {
 
-        request = new PlayerHitRequest(any());
         game = Game.start(PlayerName.of("Pepito"));
 
-        when(useCase.hit(
-                new PlayerHitCommand(any()))).thenReturn(game);
+        when(useCase.hit(any(PlayerHitCommand.class))).thenReturn(game);
 
-        restTestClient.post().uri("/games/hit)
-                .body(request)
+        restTestClient.put()
+                .uri(uriBuilder ->
+                        uriBuilder.path("/games/hit")
+                                .queryParam("gameId", game.id())
+                                .build())
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(HitResponse.class)
+                    .expectStatus().isOk()
+                .expectBody(GameResponse.class)
                 .value(hitResponse -> {
                     assert hitResponse != null;
                     assertEquals(game.id(), hitResponse.gameID());
@@ -52,6 +53,6 @@ public class PlayerHitRestAdapter {
     }
 
 
-*/
+
 
 }

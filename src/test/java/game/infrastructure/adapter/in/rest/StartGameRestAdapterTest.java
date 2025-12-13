@@ -4,7 +4,7 @@ import game.application.domain.model.*;
 import game.application.in.StartGameCommand;
 import game.application.in.StartGameUseCase;
 import game.infrastructure.adapter.in.rest.request.StartGameRequest;
-import game.infrastructure.adapter.in.rest.response.StartGameResponse;
+import game.infrastructure.adapter.in.rest.response.GameResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -43,7 +43,7 @@ public class StartGameRestAdapterTest {
                 .body(request)
                 .exchange()
                 .expectStatus().isCreated()
-                .expectBody(StartGameResponse.class)
+                .expectBody(GameResponse.class)
                 .value(gameResponse -> {
                     assert gameResponse != null;
                     assertEquals(game.id(), gameResponse.gameID());
