@@ -126,7 +126,8 @@ public class Game extends AbstractAggregateRoot<Game> {
 
     public Game playerHit(){
 
-        if(status != GameStatus.IN_PROGRESS || playerHand.score() >= 21) return this;
+        if(status != GameStatus.IN_PROGRESS || playerHand.score() >= 21)
+            throw new IllegalStateException("Cannot hit!");
 
         dealPlayerCards();
 

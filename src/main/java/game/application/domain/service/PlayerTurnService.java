@@ -21,11 +21,8 @@ public class PlayerTurnService implements PlayerHitUseCase {
     public Game hit(PlayerHitCommand command) {
         return port.getGameById(command.id())
                 .map(game -> {
-                    if (game.status() != GameStatus.IN_PROGRESS) {
-                        throw new IllegalStateException("Cannot hit: game is not in progress");
-                    }
                     Game updatedGame = game.playerHit();
-                    port.update(updatedGame); // persistir cambios
+                    port.update(updatedGame);
                     return updatedGame;
                 })
                 .orElseThrow(() -> new GameNotFoundException("Game not found with id: " + command.id()));
