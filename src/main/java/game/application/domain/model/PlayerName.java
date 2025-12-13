@@ -1,6 +1,8 @@
 package game.application.domain.model;
 
-public record PlayerName(String name) {
+public record PlayerName(
+        String name
+) {
 
 
     public static PlayerName of(String name) {

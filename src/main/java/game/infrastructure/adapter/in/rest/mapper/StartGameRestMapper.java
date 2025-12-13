@@ -11,10 +11,9 @@ public class StartGameRestMapper {
 
         return new StartGameResponse(
                 game.id(),
-                game.deck(),
                 game.playerName(),
                 game.playerHand(),
-                game.dealerHand()
+                game.dealerHand().get(0)
         );
     }
 }

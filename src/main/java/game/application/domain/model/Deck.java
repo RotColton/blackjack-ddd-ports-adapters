@@ -6,12 +6,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Deck {
-    private final LinkedHashSet<Card> cards;
-
-    private Deck(LinkedHashSet<Card> cards) {
-        this.cards = cards;
-    }
+public record Deck(
+        LinkedHashSet<Card> cards
+) {
 
     public static Deck shuffle() {
         List<Card> cards = Arrays.stream(Suit.values())

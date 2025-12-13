@@ -5,4 +5,5 @@ import game.application.domain.model.Game;
 public interface GameSaverPort {
 
     Game save(Game game);
+
 }

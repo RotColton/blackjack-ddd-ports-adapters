@@ -1,24 +1,10 @@
 services:
-  mongo:
-    image: mongo:7.0
-    container_name: mongo
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: mongodb
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: secret
     volumes:
-      - mongo-data:/data/db
-
-  app:
-    build: .
-    container_name: app
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATA_MONGODB_URI: mongodb://admin:secret@mongo:27017/blackjack?authSource=admin
-    depends_on:
-      - mongo
-
+      - mongodb:/data/db
 volumes:
-  mongo-data:
+  mongodb:

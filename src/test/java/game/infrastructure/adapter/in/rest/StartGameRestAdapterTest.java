@@ -1,7 +1,6 @@
 package game.infrastructure.adapter.in.rest;
 
-import game.application.domain.model.Game;
-import game.application.domain.model.PlayerName;
+import game.application.domain.model.*;
 import game.application.in.StartGameCommand;
 import game.application.in.StartGameUseCase;
 import game.infrastructure.adapter.in.rest.request.StartGameRequest;
@@ -24,7 +23,7 @@ public class StartGameRestAdapterTest {
     RestTestClient restTestClient;
     StartGameUseCase useCase;
     StartGameRequest request;
-    Game pepitoGame;
+    Game game;
 
     @BeforeEach
     void setUp(){
@@ -36,9 +35,9 @@ public class StartGameRestAdapterTest {
     void shouldStartGameAndReturn201() {
 
         request = new StartGameRequest("Pepito");
-        pepitoGame = Game.start(PlayerName.of("Pepito"));
+        game = Game.start(PlayerName.of("Pepito"));
         when(useCase.startGame(
-                new StartGameCommand(PlayerName.of("Pepito")))).thenReturn(pepitoGame);
+                new StartGameCommand(PlayerName.of("Pepito")))).thenReturn(game);
 
         restTestClient.post().uri("/games/start")
                 .body(request)
@@ -47,11 +46,11 @@ public class StartGameRestAdapterTest {
                 .expectBody(StartGameResponse.class)
                 .value(game -> {
                     assert game != null;
-                    assertEquals(pepitoGame.id(), game.gameID());
-                    assertEquals(pepitoGame.playerName(), game.playerName());
-                    assertEquals(pepitoGame.playerHand(), game.playerHand());
-                    assertEquals(pepitoGame.dealerHand(), game.dealerHand());
-                    assertEquals(pepitoGame.deck(), game.deck());
+                    assertEquals(this.game.id(), game.gameID());
+                    assertEquals(this.game.playerName(), game.playerName());
+                    assertEquals(this.game.playerHand(), game.playerHand());
+                    assertEquals(this.game.dealerHand(), game.dealerHand());
+                    assertEquals(this.game.deck(), game.deck());
                 });
     }
 

@@ -1,16 +1,20 @@
 package game.application.domain.model;
 
+import game.application.in.StartGameUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+
 import static org.junit.jupiter.api.Assertions.*;
+
 
 public class StartGameTest {
 
     private Game game;
+    private StartGameUseCase useCase;
 
     @BeforeEach
     void setUp() {
@@ -32,11 +36,6 @@ public class StartGameTest {
         assertEquals(2, game.playerHand().size());
         assertEquals(2, game.dealerHand().size());
         assertEquals(48, game.deck().size());
-
-    }
-
-    @Test
-    void shouldReturnTrueIfPlayerHasBlackjack() {
 
     }
 

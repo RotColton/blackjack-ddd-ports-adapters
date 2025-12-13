@@ -8,9 +8,7 @@ import java.util.UUID;
 
 public record StartGameResponse(
         UUID gameID,
-        List<Card> deck,
         PlayerName playerName,
         List<Card> playerHand,
-        List<Card> dealerHand) {
-
-}
+        Card upCard
+) {}

@@ -1,25 +1,32 @@
 package game.application.domain.model;
 
 
+import game.application.domain.event.PlayerHasBlackJackEvent;
+import org.springframework.data.domain.AbstractAggregateRoot;
+
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
 
-public class Game {
+public class Game extends AbstractAggregateRoot<Game> {
+
     private final UUID id;
     private final PlayerName playerName;
     private final Deck deck;
     private final Hand playerHand;
     private final Hand dealerHand;
-    private final GameStatus status;
+    private GameStatus status;
 
-    private Game(UUID id,
-                 PlayerName playerName,
-                 Deck deck,
-                 Hand playerHand,
-                 Hand dealerHand,
-                 GameStatus status) {
+    private Game(
+            UUID id,
+            PlayerName playerName,
+            Deck deck,
+            Hand playerHand,
+            Hand dealerHand,
+            GameStatus status
+    ) {
         this.id = id;
         this.playerName = playerName;
         this.deck = deck;
@@ -43,6 +50,16 @@ public class Game {
                 GameStatus.IN_PROGRESS);
 
         game.dealOpeningCards();
+
+        if(game.hasPlayerBlackJack()) {
+            game.registerEvent(new PlayerHasBlackJackEvent(
+                    game.id(),
+                    game.playerName().name(),
+                    game.playerHand(),
+                    game.playerHand.score()));
+
+            game.status = GameStatus.PLAYER_WON;
+        }
 
         return game;
     }
@@ -90,7 +107,30 @@ public class Game {
         return this.status;
     }
 
-    public static Game from(UUID id, PlayerName playerName, Deck deck, Hand playerHand, Hand dealerHand, GameStatus status) {
-        return new Game(id, playerName, deck, playerHand, dealerHand, status);
+    public static Game from(
+            UUID id,
+            PlayerName playerName,
+            Deck deck,
+            Hand playerHand,
+            Hand dealerHand,
+            GameStatus status) {
+
+        return new Game(
+                id,
+                playerName,
+                deck,
+                playerHand,
+                dealerHand,
+                status);
+    }
+
+
+
+    public boolean hasPlayerBlackJack() {
+        return playerHand.isBlackJack();
+    }
+
+    public Collection<Object> events(){
+        return List.copyOf(super.domainEvents());
     }
 }

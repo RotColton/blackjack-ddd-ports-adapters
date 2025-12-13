@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface GameMongoRepository extends MongoRepository<GameDocument, UUID> {
 
     Optional<GameDocument> findByPlayerName(String playerName);
+
 }
