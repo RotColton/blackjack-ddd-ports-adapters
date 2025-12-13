@@ -6,10 +6,8 @@ import game.application.out.SearchGamePort;
 import game.infrastructure.adapter.out.persistence.mapper.GamePersistenceMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Component
 public class GamePersistenceAdapter implements
@@ -34,19 +32,13 @@ public class GamePersistenceAdapter implements
     @Override
     public Optional<Game> getGameByPlayerName(PlayerName name) {
         return repository.findByPlayerName(name.name())
-                .map(document -> Game.from(
-                        UUID.fromString(document.getId()),
-                        PlayerName.of(document.getPlayerName()),
-                        Deck.from(new LinkedHashSet<>(Optional.ofNullable(document.getDeck()).orElse(Collections.emptyList()))),
-                        Hand.from(new LinkedHashSet<>(Optional.ofNullable(document.getPlayerHand()).orElse(Collections.emptyList()))),
-                        Hand.from(new LinkedHashSet<>(Optional.ofNullable(document.getDealerHand()).orElse(Collections.emptyList()))),
-                        document.getStatus()
-                ));
+                .map(mapper::toDomain);
     }
 
     @Override
     public Optional<Game> getGameById(GameID id) {
-        return Optional.ofNullable(mapper.toDomain(repository.findById(id.id()).get()));
+        return repository.findById(id.id())
+                .map(mapper::toDomain);
     }
 
 }

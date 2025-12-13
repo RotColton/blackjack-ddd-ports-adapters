@@ -1,7 +1,7 @@
 package game.application.domain.model;
 
 
-import game.application.domain.event.PlayerHasBlackJackEvent;
+import game.application.domain.event.PlayerWinsEvent;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.util.Collection;
@@ -51,15 +51,7 @@ public class Game extends AbstractAggregateRoot<Game> {
 
         game.dealOpeningCards();
 
-        if(game.hasPlayerBlackJack()) {
-            game.registerEvent(new PlayerHasBlackJackEvent(
-                    game.id(),
-                    game.playerName().name(),
-                    game.playerHand(),
-                    game.playerHand.score()));
-
-            game.status = GameStatus.PLAYER_WON;
-        }
+        if(game.hasPlayerBlackJack()) game.playerWins();
 
         return game;
     }
@@ -133,9 +125,25 @@ public class Game extends AbstractAggregateRoot<Game> {
     }
 
     public Game playerHit(){
-        if(status == GameStatus.IN_PROGRESS && playerHand.score() < 21)
-            dealPlayerCards();
+
+        if(status != GameStatus.IN_PROGRESS || playerHand.score() >= 21) return this;
+
+        dealPlayerCards();
+
+        if(hasPlayerBlackJack()) playerWins();
+
         return this;
+    }
+
+    private void playerWins(){
+        registerEvent(new PlayerWinsEvent(
+                id(),
+                playerName().name(),
+                playerHand(),
+                playerHand.score()));
+
+        status = GameStatus.PLAYER_WON;
+
     }
 
 }
