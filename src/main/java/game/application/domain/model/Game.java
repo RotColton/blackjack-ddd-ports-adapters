@@ -1,6 +1,7 @@
 package game.application.domain.model;
 
 
+import game.application.domain.event.PlayerLosesEvent;
 import game.application.domain.event.PlayerWinsEvent;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
@@ -130,10 +131,26 @@ public class Game extends AbstractAggregateRoot<Game> {
             throw new IllegalStateException("Cannot hit!");
 
         dealPlayerCards();
-
-        if(hasPlayerBlackJack()) playerWins();
+        evaluatePlayerOutcome();
 
         return this;
+    }
+
+    private void evaluatePlayerOutcome() {
+        if (playerHand.score() > 21)
+            playerLoses();
+        if (hasPlayerBlackJack())
+            playerWins();
+    }
+
+    private void playerLoses() {
+        registerEvent(new PlayerLosesEvent(
+                id(),
+                playerName().name(),
+                playerHand(),
+                playerHand.score()));
+
+        status = GameStatus.DEALER_WON;
     }
 
     private void playerWins(){
