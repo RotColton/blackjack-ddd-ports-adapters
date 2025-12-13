@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class Deck {
     private final LinkedHashSet<Card> cards;
 
-    private Deck(LinkedHashSet<Card> cards){
+    private Deck(LinkedHashSet<Card> cards) {
         this.cards = cards;
     }
 
@@ -26,7 +26,7 @@ public class Deck {
         return new Deck(deck);
     }
 
-    public int size(){
+    public int size() {
         return cards.size();
     }
 
@@ -38,6 +38,10 @@ public class Deck {
         Card card = cards.iterator().next();
         cards.remove(card);
         return card;
+    }
+
+    public static Deck from(LinkedHashSet<Card> cards) {
+        return new Deck(cards);
     }
 
 }

@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class StartGameRestMapper {
 
-    public StartGameResponse toResponse(Game game){
+    public static StartGameResponse toResponse(Game game) {
 
         return new StartGameResponse(
                 game.id(),
                 game.deck(),
                 game.playerName(),
                 game.playerHand(),
-                game.dealerUpcard()
+                game.dealerHand()
         );
     }
 }

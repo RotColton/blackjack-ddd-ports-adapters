@@ -7,7 +7,7 @@ public record Hand(
 
     private static final short BLACKJACK = 21;
 
-    public void addCard(Card card){
+    public void addCard(Card card) {
         cards.add(card);
     }
 
@@ -20,8 +20,8 @@ public record Hand(
                 .filter(c -> c.value() == Value.ACE)
                 .count();
 
-        while(aces > 0 && total+10 <=21){
-            total+=10;
+        while (aces > 0 && total + 10 <= 21) {
+            total += 10;
             aces--;
         }
 
@@ -30,5 +30,9 @@ public record Hand(
 
     public boolean isBlackJack() {
         return score() == BLACKJACK;
+    }
+
+    public static Hand from(LinkedHashSet<Card> cards) {
+        return new Hand(cards);
     }
 }

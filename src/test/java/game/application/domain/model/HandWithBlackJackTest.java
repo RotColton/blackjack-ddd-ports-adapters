@@ -3,8 +3,6 @@ package game.application.domain.model;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-
 import java.util.LinkedHashSet;
 import java.util.stream.Stream;
 
@@ -23,22 +21,22 @@ public class HandWithBlackJackTest {
 
     static Stream<Arguments> blackJackHandsWithThreeCards() {
         return Stream.of(
-                Arguments.of(Value.ACE,  Value.ACE,  Value.NINE),
-                Arguments.of(Value.ACE,  Value.TWO,  Value.EIGHT),
-                Arguments.of(Value.ACE,  Value.THREE, Value.SEVEN),
-                Arguments.of(Value.ACE,  Value.FOUR, Value.SIX),
-                Arguments.of(Value.ACE,  Value.FIVE, Value.FIVE),
-                Arguments.of(Value.ACE,  Value.TEN,  Value.TEN),
-                Arguments.of(Value.TWO,  Value.NINE, Value.TEN),
+                Arguments.of(Value.ACE, Value.ACE, Value.NINE),
+                Arguments.of(Value.ACE, Value.TWO, Value.EIGHT),
+                Arguments.of(Value.ACE, Value.THREE, Value.SEVEN),
+                Arguments.of(Value.ACE, Value.FOUR, Value.SIX),
+                Arguments.of(Value.ACE, Value.FIVE, Value.FIVE),
+                Arguments.of(Value.ACE, Value.TEN, Value.TEN),
+                Arguments.of(Value.TWO, Value.NINE, Value.TEN),
                 Arguments.of(Value.THREE, Value.EIGHT, Value.TEN),
-                Arguments.of(Value.THREE, Value.NINE,  Value.NINE),
+                Arguments.of(Value.THREE, Value.NINE, Value.NINE),
                 Arguments.of(Value.FOUR, Value.SEVEN, Value.TEN),
                 Arguments.of(Value.FOUR, Value.EIGHT, Value.NINE),
-                Arguments.of(Value.FIVE, Value.SIX,  Value.TEN),
+                Arguments.of(Value.FIVE, Value.SIX, Value.TEN),
                 Arguments.of(Value.FIVE, Value.SEVEN, Value.NINE),
                 Arguments.of(Value.FIVE, Value.EIGHT, Value.EIGHT),
-                Arguments.of(Value.SIX,  Value.SIX,  Value.NINE),
-                Arguments.of(Value.SIX,  Value.SEVEN, Value.EIGHT),
+                Arguments.of(Value.SIX, Value.SIX, Value.NINE),
+                Arguments.of(Value.SIX, Value.SEVEN, Value.EIGHT),
                 Arguments.of(Value.SEVEN, Value.SEVEN, Value.SEVEN)
         );
     }
@@ -80,7 +78,7 @@ public class HandWithBlackJackTest {
 
     @ParameterizedTest
     @MethodSource("blackJackHandsWithTwoCards")
-    void WithTwoCardsShouldHasBlackJack(Value v1, Value v2){
+    void WithTwoCardsShouldHasBlackJack(Value v1, Value v2) {
         Card card1 = new Card(Suit.SPADES, v1);
         Card card2 = new Card(Suit.HEARTS, v2);
 

@@ -1,114 +1,80 @@
 package game.infrastructure.adapter.in.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import game.application.domain.model.Game;
+import game.application.domain.model.PlayerName;
+import game.application.in.StartGameCommand;
 import game.application.in.StartGameUseCase;
-import game.infrastructure.adapter.in.rest.mapper.StartGameRestMapper;
 import game.infrastructure.adapter.in.rest.request.StartGameRequest;
+import game.infrastructure.adapter.in.rest.response.StartGameResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
+import org.springframework.test.web.servlet.client.RestTestClient;
 
-@WebMvcTest(controllers = StartGameRestAdapter.class)
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
+
 public class StartGameRestAdapterTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    RestTestClient restTestClient;
+    StartGameUseCase useCase;
+    StartGameRequest request;
+    Game pepitoGame;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private StartGameUseCase startGameUseCase;
-
-    @MockBean
-    private StartGameRestMapper mapper;
-
+    @BeforeEach
+    void setUp(){
+        useCase = Mockito.mock(StartGameUseCase.class);
+        restTestClient = RestTestClient.bindToController(new StartGameRestAdapter(useCase)).build();
+    }
 
     @Test
-    void shouldStartGameAndReturn201() throws Exception {
+    void shouldStartGameAndReturn201() {
 
+        request = new StartGameRequest("Pepito");
+        pepitoGame = Game.start(PlayerName.of("Pepito"));
+        when(useCase.startGame(
+                new StartGameCommand(PlayerName.of("Pepito")))).thenReturn(pepitoGame);
 
-        StartGameRequest request = new StartGameRequest("Pepito");
+        restTestClient.post().uri("/games/start")
+                .body(request)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(StartGameResponse.class)
+                .value(game -> {
+                    assert game != null;
+                    assertEquals(pepitoGame.id(), game.gameID());
+                    assertEquals(pepitoGame.playerName(), game.playerName());
+                    assertEquals(pepitoGame.playerHand(), game.playerHand());
+                    assertEquals(pepitoGame.dealerHand(), game.dealerHand());
+                    assertEquals(pepitoGame.deck(), game.deck());
+                });
+    }
 
-        mockMvc.perform(post("/games/start")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated());
+    @ParameterizedTest
+    @MethodSource("invalidPlayerNames")
+    void shouldReturn400ForInvalidNames(String playerName) {
 
-        then(startGameUseCase).should().startGame(
-                argThat(cmd -> cmd.playerName().toString().contains("Pepito"))
+        request = new StartGameRequest(playerName);
+
+        restTestClient.post().uri("/games/start")
+                .body(request)
+                .exchange()
+                .expectStatus()
+                .isBadRequest();
+    }
+
+    static Stream<String> invalidPlayerNames() {
+        return Stream.of(
+                null,
+                "",
+                " ",
+                "12",
+                "0123456789"
         );
     }
-
-    @Test
-    void shouldReturn400WhenPlayerNameIsTooShort() throws Exception{
-
-        StartGameRequest request = new StartGameRequest("Ro");
-
-        mockMvc.perform(post("/games/start")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    void shouldReturn400WhenPlayerNameIsBlank() throws Exception{
-
-        StartGameRequest request = new StartGameRequest(" ");
-
-        mockMvc.perform(post("/games/start")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    void shouldReturn400WhenPlayerNameIsNull() throws Exception{
-
-        StartGameRequest request = new StartGameRequest(null);
-
-        mockMvc.perform(post("/games/start")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    void shouldReturn400WhenPlayerNameIsEmpty() throws Exception{
-
-        StartGameRequest request = new StartGameRequest("");
-
-        mockMvc.perform(post("/games/start")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    void shouldReturn400WhenPlayerNameIsTooLarge() throws Exception{
-
-        StartGameRequest request = new StartGameRequest("0123456789");
-
-        mockMvc.perform(post("/games/start")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-    }
-
-
-
-
-
 }

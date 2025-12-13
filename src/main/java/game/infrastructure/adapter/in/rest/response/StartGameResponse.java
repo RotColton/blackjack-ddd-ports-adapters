@@ -11,6 +11,6 @@ public record StartGameResponse(
         List<Card> deck,
         PlayerName playerName,
         List<Card> playerHand,
-        Card upCard) {
+        List<Card> dealerHand) {
 
 }
