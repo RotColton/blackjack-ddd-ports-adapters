@@ -2,9 +2,7 @@ package game.application.domain.model;
 
 import java.util.LinkedHashSet;
 
-public record Hand(
-        LinkedHashSet<Card> cards
-) {
+public record Hand(LinkedHashSet<Card> cards) {
 
     private static final short BLACKJACK = 21;
 

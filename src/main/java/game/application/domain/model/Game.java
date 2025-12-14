@@ -5,10 +5,7 @@ import game.application.domain.event.PlayerLosesEvent;
 import game.application.domain.event.PlayerWinsEvent;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 public class Game extends AbstractAggregateRoot<Game> {
@@ -57,19 +54,92 @@ public class Game extends AbstractAggregateRoot<Game> {
         return game;
     }
 
-    private void dealDealerCards() {
-        dealerHand.addCard(deck.drawCard());
-    }
-
-    private void dealPlayerCards() {
-        playerHand.addCard(deck.drawCard());
-    }
-
     private void dealOpeningCards() {
         dealPlayerCards();
         dealDealerCards();
         dealPlayerCards();
         dealDealerCards();
+    }
+
+    private void dealDealerCards() {
+        dealerHand.addCard(deck.drawCard());
+    }
+
+    private void dealPlayerCards() { playerHand.addCard(deck.drawCard()); }
+
+    public boolean hasPlayerBlackJack() {
+        return playerHand.isBlackJack();
+    }
+
+    public Game playerHit(){
+
+        if(status != GameStatus.IN_PROGRESS || playerHand.score() >= 21)
+            throw new IllegalStateException("Cannot hit!");
+
+        dealPlayerCards();
+
+        if(isPlayerBust()) return playerLoses();
+
+        if(hasPlayerBlackJack()) return dealerHit();
+
+        return this;
+
+    }
+
+    public Game dealerHit(){
+
+        while(dealerHand.score() < 17)
+            dealDealerCards();
+
+        if (isDealerBust()){ return playerWins(); }
+
+        return resolveGameOutcome();
+    }
+
+    public void playerStand(){
+        dealerHit();
+    }
+
+    public Game resolveGameOutcome(){
+        if(playerHand.score() == dealerHand.score()) return endInPush();
+
+        if(playerHand.score() > dealerHand.score()) return playerWins();
+
+        return playerLoses();
+    }
+
+    public boolean isPlayerBust() { return playerHand.score() > 21; }
+
+    public boolean isDealerBust() { return dealerHand.score() > 21; }
+
+    private Game playerLoses() {
+        registerEvent(new PlayerLosesEvent(
+                id(),
+                playerName().name(),
+                playerHand(),
+                playerHand.score()));
+
+        status = GameStatus.DEALER_WON;
+
+        return this;
+    }
+
+    private Game playerWins(){
+        registerEvent(new PlayerWinsEvent(
+                id(),
+                playerName().name(),
+                playerHand(),
+                playerHand.score()));
+
+        status = GameStatus.PLAYER_WON;
+
+        return this;
+
+    }
+
+    public Game endInPush(){
+        status = GameStatus.PUSH;
+        return this;
     }
 
     public UUID id() {
@@ -90,10 +160,6 @@ public class Game extends AbstractAggregateRoot<Game> {
 
     public List<Card> deck() {
         return List.copyOf(deck.asList());
-    }
-
-    public Card dealerUpcard() {
-        return dealerHand.cards().stream().findFirst().orElse(null);
     }
 
     public GameStatus status() {
@@ -117,51 +183,8 @@ public class Game extends AbstractAggregateRoot<Game> {
                 status);
     }
 
-    public boolean hasPlayerBlackJack() {
-        return playerHand.isBlackJack();
-    }
-
     public Collection<Object> events(){
         return List.copyOf(super.domainEvents());
-    }
-
-    public Game playerHit(){
-
-        if(status != GameStatus.IN_PROGRESS || playerHand.score() >= 21)
-            throw new IllegalStateException("Cannot hit!");
-
-        dealPlayerCards();
-        evaluatePlayerOutcome();
-
-        return this;
-    }
-
-    private void evaluatePlayerOutcome() {
-        if (playerHand.score() > 21)
-            playerLoses();
-        if (hasPlayerBlackJack())
-            playerWins();
-    }
-
-    private void playerLoses() {
-        registerEvent(new PlayerLosesEvent(
-                id(),
-                playerName().name(),
-                playerHand(),
-                playerHand.score()));
-
-        status = GameStatus.DEALER_WON;
-    }
-
-    private void playerWins(){
-        registerEvent(new PlayerWinsEvent(
-                id(),
-                playerName().name(),
-                playerHand(),
-                playerHand.score()));
-
-        status = GameStatus.PLAYER_WON;
-
     }
 
 }

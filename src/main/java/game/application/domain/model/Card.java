@@ -1,5 +1,6 @@
 package game.application.domain.model;
 
 public record Card(
-        Suit suit, Value value
+        Suit suit,
+        Value value
 ) {}

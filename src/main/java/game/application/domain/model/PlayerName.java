@@ -1,13 +1,6 @@
 package game.application.domain.model;
 
-public record PlayerName(
-        String name
-) {
-
-    public static PlayerName of(String name) {
-        validate(name);
-        return new PlayerName(name);
-    }
+public record PlayerName(String name) {
 
     private static void validate(String name) {
         if (name == null || name.isBlank()) {
@@ -21,4 +14,10 @@ public record PlayerName(
     public String name() {
         return this.name;
     }
+
+    public static PlayerName of(String name) {
+        validate(name);
+        return new PlayerName(name);
+    }
+
 }

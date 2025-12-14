@@ -6,9 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record Deck(
-        LinkedHashSet<Card> cards
-) {
+public record Deck(LinkedHashSet<Card> cards) {
 
     public static Deck shuffle() {
         List<Card> cards = Arrays.stream(Suit.values())
@@ -23,18 +21,18 @@ public record Deck(
         return new Deck(deck);
     }
 
+    public Card drawCard() {
+        Card card = cards.iterator().next();
+        cards.remove(card);
+        return card;
+    }
+
     public int size() {
         return cards.size();
     }
 
     public List<Card> asList() {
         return List.copyOf(cards);
-    }
-
-    public Card drawCard() {
-        Card card = cards.iterator().next();
-        cards.remove(card);
-        return card;
     }
 
     public static Deck from(LinkedHashSet<Card> cards) {

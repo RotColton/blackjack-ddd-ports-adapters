@@ -12,11 +12,10 @@ import java.util.Optional;
 public class GamePersistenceAdapter implements GameOutputPort {
 
     private final GameMongoRepository repository;
-    private final GamePersistenceMapper mapper;
+    private GamePersistenceMapper mapper;
 
-    public GamePersistenceAdapter(GameMongoRepository repository, GamePersistenceMapper mapper) {
+    public GamePersistenceAdapter(GameMongoRepository repository) {
         this.repository = repository;
-        this.mapper = mapper;
     }
 
     @Override

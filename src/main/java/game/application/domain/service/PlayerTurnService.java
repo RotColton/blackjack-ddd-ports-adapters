@@ -2,7 +2,6 @@ package game.application.domain.service;
 
 import game.application.domain.exception.GameNotFoundException;
 import game.application.domain.model.Game;
-import game.application.domain.model.GameStatus;
 import game.application.in.PlayerHitCommand;
 import game.application.in.PlayerHitUseCase;
 import game.application.out.GameOutputPort;

@@ -1,7 +1,6 @@
 package game.infrastructure.adapter.in.rest;
 
-import game.application.domain.model.Game;
-import game.application.domain.model.PlayerName;
+import game.application.domain.model.*;
 import game.application.in.PlayerHitCommand;
 import game.application.in.PlayerHitUseCase;
 import game.infrastructure.adapter.in.rest.response.GameResponse;
@@ -9,6 +8,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.client.RestTestClient;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,10 +30,36 @@ public class PlayerHitRestAdapterTest {
         restTestClient = RestTestClient.bindToController(new PlayerHitRestAdapter(useCase)).build();
     }
 
+    //Todo: create game with from()
     @Test
     void shouldPlayerHitAndReturn200() {
 
-        game = Game.start(PlayerName.of("Pepito"));
+        Hand playerHand = Hand.from(new LinkedHashSet<>(
+                List.of(
+                        new Card(Suit.CLUBS, Value.SIX),
+                        new Card(Suit.CLUBS, Value.JACK)
+                )));
+        Deck deck = Deck.from(new LinkedHashSet<>(
+                List.of(
+                        new Card(Suit.CLUBS, Value.TWO),
+                        new Card(Suit.HEARTS, Value.NINE)
+                )));
+
+        Hand dealerHand = Hand.from(new LinkedHashSet<>(
+                List.of(
+                        new Card(Suit.HEARTS, Value.SIX),
+                        new Card(Suit.CLUBS, Value.QUEEN)
+                )
+        ));
+
+        Game game = Game.from(
+                UUID.randomUUID(),
+                PlayerName.of("Pepito"),
+                deck,
+                playerHand,
+                dealerHand,
+                GameStatus.IN_PROGRESS);
+
 
         when(useCase.hit(any(PlayerHitCommand.class))).thenReturn(game);
 
@@ -51,8 +80,5 @@ public class PlayerHitRestAdapterTest {
                     assertEquals(game.status(), hitResponse.status());
                 });
     }
-
-
-
 
 }

@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 public class PlayerHitTest {
@@ -16,7 +17,7 @@ public class PlayerHitTest {
 
         Hand playerHand = Hand.from(new LinkedHashSet<>(
                 List.of(
-                        new Card(Suit.CLUBS, Value.QUEEN),
+                        new Card(Suit.CLUBS, Value.SIX),
                         new Card(Suit.CLUBS, Value.JACK)
                 )));
         Deck deck = Deck.from(new LinkedHashSet<>(
@@ -41,9 +42,8 @@ public class PlayerHitTest {
                 )));
         game = Game.from(any(), any(), any(), playerHand, any(), GameStatus.IN_PROGRESS);
 
-        game.playerHit();
-
-        assertEquals(2, game.playerHand().size());
+        assertThrows(IllegalStateException.class,
+                () -> game.playerHit());
 
     }
 
@@ -57,9 +57,39 @@ public class PlayerHitTest {
 
         game = Game.from(any(), any(), any(), playerHand, any(), GameStatus.PLAYER_WON);
 
+        assertThrows(IllegalStateException.class,
+                () -> game.playerHit());
+    }
+
+
+    @Test
+    void shouldEndGameInBlackJackPush(){
+        Hand playerHand = Hand.from(new LinkedHashSet<>(
+                List.of(
+                        new Card(Suit.HEARTS, Value.KING),
+                        new Card(Suit.CLUBS, Value.QUEEN)
+                )
+        ));
+
+        Hand dealerHand = Hand.from(new LinkedHashSet<>(
+                List.of(
+                        new Card(Suit.HEARTS, Value.JACK),
+                        new Card(Suit.DIAMONDS, Value.ACE)
+                )
+        ));
+
+        Deck deck = Deck.from(new LinkedHashSet<>(
+                List.of(
+                        new Card(Suit.SPADES, Value.ACE),
+                        new Card(Suit.CLUBS, Value.ACE)
+                )
+        ));
+
+        Game game = Game.from(any(), any(), deck, playerHand, dealerHand, GameStatus.IN_PROGRESS);
         game.playerHit();
 
-        assertEquals(2, game.playerHand().size());
+        assertEquals(GameStatus.PUSH, game.status());
 
     }
+
 }
