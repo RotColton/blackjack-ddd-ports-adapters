@@ -1,7 +1,7 @@
 package game.infrastructure.adapter.out.persistence;
 
 import game.application.domain.model.*;
-import game.application.out.GameOutputPort;
+import game.application.out.GameQueryPort;
 import game.infrastructure.adapter.out.persistence.mapper.GamePersistenceMapper;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
@@ -10,7 +10,7 @@ import static game.infrastructure.adapter.out.persistence.mapper.GamePersistence
 
 
 @Component
-public class GamePersistenceAdapter implements GameOutputPort {
+public class GamePersistenceAdapter implements GameQueryPort {
 
     private final GameMongoRepository repository;
 
@@ -19,23 +19,21 @@ public class GamePersistenceAdapter implements GameOutputPort {
     }
 
     @Override
-    public Game save(Game game) {
+    public Game addGame(Game game) {
         return toDomain(repository.save(toDocument(game)));
     }
 
     @Override
-    public Game update(Game game) {
-        return save(game);
-    }
+    public Game applyGameChanges(Game game) { return toDomain(repository.save(toDocument(game))); }
 
     @Override
-    public Optional<Game> getGameByPlayerName(PlayerName playerName) {
+    public Optional<Game> loadGame(PlayerName playerName) {
         return repository.findByPlayerName(playerName.name())
                 .map(GamePersistenceMapper::toDomain);
     }
 
     @Override
-    public Optional<Game> getGameById(GameID gameID) {
+    public Optional<Game> loadGame(GameID gameID) {
         return repository.findById(gameID.id().toString())
                 .map(GamePersistenceMapper::toDomain);
     }

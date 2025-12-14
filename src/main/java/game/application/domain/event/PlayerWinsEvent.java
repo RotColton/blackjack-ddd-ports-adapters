@@ -4,7 +4,6 @@ import game.application.domain.model.Card;
 import game.application.domain.model.GameID;
 
 import java.util.List;
-import java.util.UUID;
 
 public record PlayerWinsEvent(
         GameID gameID,

@@ -10,6 +10,8 @@ import java.util.*;
 
 public class Game extends AbstractAggregateRoot<Game> {
 
+    public static final String CANNOT_STAND = "Cannot stand: the game is not in progress";
+    public static final String CANNOT_HIT = "Cannot hit: the game is not in progress";
     private final GameID id;
     private final PlayerName playerName;
     private final Deck deck;
@@ -74,7 +76,7 @@ public class Game extends AbstractAggregateRoot<Game> {
     public Game playerHit(){
 
         if(status != GameStatus.IN_PROGRESS)
-            throw new IllegalStateException("Cannot hit: the game is not in progress");
+            throw new IllegalStateException(CANNOT_HIT);
 
         dealPlayerCards();
 
@@ -98,7 +100,7 @@ public class Game extends AbstractAggregateRoot<Game> {
 
     public Game playerStand(){
         if(status != GameStatus.IN_PROGRESS)
-            throw new IllegalStateException("Cannot stand: the game is not in progress");
+            throw new IllegalStateException(CANNOT_STAND);
         return dealerHit();
     }
 

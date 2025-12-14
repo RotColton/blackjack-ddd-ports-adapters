@@ -6,7 +6,6 @@ import game.application.domain.model.GameStatus;
 import game.application.domain.model.PlayerName;
 import java.util.List;
 
-//Todo: change to UL
 public record GameResponse(
         GameID gameID,
         PlayerName playerName,

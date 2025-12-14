@@ -6,39 +6,40 @@ import game.application.in.PlayerHitCommand;
 import game.application.in.PlayerHitUseCase;
 import game.application.in.PlayerStandCommand;
 import game.application.in.PlayerStandUseCase;
-import game.application.out.GameOutputPort;
+import game.application.out.GameQueryPort;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PlayerTurnService implements PlayerHitUseCase, PlayerStandUseCase {
 
-    private final GameOutputPort port;
+    public static final String GAME_NOT_FOUND = "Game not found";
+    private final GameQueryPort port;
 
-    public PlayerTurnService(GameOutputPort port) {
+    public PlayerTurnService(GameQueryPort port) {
         this.port = port;
     }
 
     @Override
     public Game hit(PlayerHitCommand command) {
-        return port.getGameById(command.gameID())
+        return port.loadGame(command.gameID())
                 .map(game -> {
                     Game updatedGame = game.playerHit();
-                    port.update(updatedGame);
+                    port.applyGameChanges(updatedGame);
                     return updatedGame;
-                })//todo creare message exception constant
-                .orElseThrow(() -> new GameNotFoundException("Game not found"));
+                })
+                .orElseThrow(() -> new GameNotFoundException(GAME_NOT_FOUND));
     }
 
 
     @Override
     public Game stand(PlayerStandCommand command) {
-        return port.getGameById(command.gameID())
+        return port.loadGame(command.gameID())
                 .map(game ->{
                     Game updatedGame = game.playerStand();
-                    port.update(updatedGame);
+                    port.applyGameChanges(updatedGame);
                     return updatedGame;
                 })
-                .orElseThrow(() -> new GameNotFoundException("Game not found"));
+                .orElseThrow(() -> new GameNotFoundException(GAME_NOT_FOUND));
     }
 }
 
