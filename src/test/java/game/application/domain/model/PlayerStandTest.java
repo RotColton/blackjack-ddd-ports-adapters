@@ -1,14 +1,31 @@
 package game.application.domain.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+
 
 public class PlayerStandTest {
+
+    Game game;
+    Deck emptyDeck;
+    GameID gameID;
+    PlayerName name;
+    Hand emptyHand;
+    GameStatus inProgressStatus;
+
+    @BeforeEach
+    void setUp(){
+        emptyDeck = Deck.from(new LinkedHashSet<>());
+        gameID = new GameID(UUID.randomUUID());
+        name = PlayerName.of("Pepito");
+        emptyHand = Hand.from(new LinkedHashSet<Card>());
+        inProgressStatus = GameStatus.IN_PROGRESS;
+    }
 
     @Test
     void shouldPlayerWinsWhenDealerBust(){
@@ -35,13 +52,14 @@ public class PlayerStandTest {
                 )
         ));
 
-        Game game = Game.from(
-                UUID.randomUUID(),
-                PlayerName.of("Pepito"),
+        game = Game.from(
+                gameID,
+                name,
                 deck,
                 playerHand,
                 dealerHand,
-                GameStatus.IN_PROGRESS);
+                inProgressStatus
+        );
 
         game.playerStand();
         assertEquals(GameStatus.PLAYER_WON, game.status());
@@ -65,14 +83,14 @@ public class PlayerStandTest {
                 )
         ));
 
-        //Todo: change any()
-        Game game = Game.from(
-                UUID.randomUUID(),
-                PlayerName.of("Pepito"),
-                any(),
+        game = Game.from(
+                gameID,
+                name,
+                emptyDeck,
                 playerHand,
                 dealerHand,
-                GameStatus.IN_PROGRESS);
+                inProgressStatus
+        );
 
         game.playerStand();
 
@@ -96,14 +114,15 @@ public class PlayerStandTest {
                         new Card(Suit.CLUBS, Value.SEVEN)
                 )
         ));
-//Todo: change any()
-        Game game = Game.from(
-                UUID.randomUUID(),
-                PlayerName.of("Pepito"),
-                any(),
+
+        game = Game.from(
+                gameID,
+                name,
+                emptyDeck,
                 playerHand,
                 dealerHand,
-                GameStatus.IN_PROGRESS);
+                inProgressStatus
+        );
 
         game.playerStand();
 

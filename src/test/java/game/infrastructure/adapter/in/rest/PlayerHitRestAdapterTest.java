@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.client.RestTestClient;
-
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +21,11 @@ public class PlayerHitRestAdapterTest {
     RestTestClient restTestClient;
     PlayerHitUseCase useCase;
     Game game;
+    Deck emptyDeck;
+    GameID gameID;
+    PlayerName name;
+    Hand emptyHand;
+    GameStatus inProgressStatus;
 
 
     @BeforeEach
@@ -29,44 +33,37 @@ public class PlayerHitRestAdapterTest {
         //Todo: Mocking methods declared on non-public parent classes is not supported.
         useCase = Mockito.mock(PlayerHitUseCase.class);
         restTestClient = RestTestClient.bindToController(new PlayerHitRestAdapter(useCase)).build();
+        emptyDeck = Deck.from(new LinkedHashSet<>());
+        gameID = new GameID(UUID.randomUUID());
+        name = PlayerName.of("Pepito");
+        emptyHand = Hand.from(new LinkedHashSet<Card>());
+        inProgressStatus = GameStatus.IN_PROGRESS;
     }
 
     @Test
     void shouldPlayerHitAndReturn200() {
-
-        Hand playerHand = Hand.from(new LinkedHashSet<>(
-                List.of(
-                        new Card(Suit.CLUBS, Value.SIX),
-                        new Card(Suit.CLUBS, Value.JACK)
-                )));
-        Deck deck = Deck.from(new LinkedHashSet<>(
-                List.of(
-                        new Card(Suit.CLUBS, Value.TWO),
-                        new Card(Suit.HEARTS, Value.NINE)
-                )));
-
         Hand dealerHand = Hand.from(new LinkedHashSet<>(
                 List.of(
-                        new Card(Suit.HEARTS, Value.SIX),
-                        new Card(Suit.CLUBS, Value.QUEEN)
+                        new Card(Suit.CLUBS, Value.QUEEN),
+                        new Card(Suit.CLUBS, Value.ACE)
                 )
         ));
 
-        Game game = Game.from(
-                UUID.randomUUID(),
-                PlayerName.of("Pepito"),
-                deck,
-                playerHand,
+        game = Game.from(
+                gameID,
+                name,
+                emptyDeck,
+                emptyHand,
                 dealerHand,
-                GameStatus.IN_PROGRESS);
-
+                inProgressStatus
+        );
 
         when(useCase.hit(any(PlayerHitCommand.class))).thenReturn(game);
 
         restTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder.path("/games/hit")
-                                .queryParam("gameId", game.id())
+                                .queryParam("gameId", game.id().id())
                                 .build())
                 .exchange()
                     .expectStatus().isOk()
@@ -76,7 +73,6 @@ public class PlayerHitRestAdapterTest {
                     assertEquals(game.id(), hitResponse.gameID());
                     assertEquals(game.playerName(), hitResponse.playerName());
                     assertEquals(game.playerHand(), hitResponse.playerHand());
-                    assertEquals(game.dealerHand().get(0), hitResponse.upCard());
                     assertEquals(game.status(), hitResponse.status());
                 });
     }

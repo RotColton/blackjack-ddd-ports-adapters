@@ -1,12 +1,13 @@
 package game.application.domain.event;
 
 import game.application.domain.model.Card;
+import game.application.domain.model.GameID;
 
 import java.util.List;
 import java.util.UUID;
 
 public record PlayerLosesEvent(
-        UUID gameID,
+        GameID gameID,
         String playerName,
         List<Card> playerHand,
         int score

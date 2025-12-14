@@ -9,7 +9,7 @@ public class GamePersistenceMapper {
 
     public static GameDocument toDocument(Game game) {
         return GameDocument.builder()
-                .id(game.id().toString())
+                .id(game.id().id().toString())
                 .deck(game.deck())
                 .playerName(game.playerName().name())
                 .playerHand(game.playerHand())
@@ -20,7 +20,7 @@ public class GamePersistenceMapper {
 
     public static Game toDomain(GameDocument document) {
         return Game.from(
-                UUID.fromString(document.getId()),
+                new GameID(UUID.fromString(document.getId())),
                 PlayerName.of(document.getPlayerName()),
                 Deck.from(new LinkedHashSet<>((document.getDeck()))),
                 Hand.from(new LinkedHashSet<>(document.getPlayerHand())),

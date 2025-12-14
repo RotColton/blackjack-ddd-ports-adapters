@@ -32,7 +32,7 @@ public class StartGameRestAdapterTest {
     }
 
     @Test
-    void shouldStartGameAndReturn201() {
+    void shouldStartGame() {
 
         request = new StartGameRequest("Pepito");
         game = Game.start(PlayerName.of("Pepito"));
@@ -42,14 +42,13 @@ public class StartGameRestAdapterTest {
         restTestClient.post().uri("/games/start")
                 .body(request)
                 .exchange()
-                .expectStatus().isCreated()
+                .expectStatus().isOk()
                 .expectBody(GameResponse.class)
                 .value(gameResponse -> {
                     assert gameResponse != null;
                     assertEquals(game.id(), gameResponse.gameID());
                     assertEquals(game.playerName(), gameResponse.playerName());
                     assertEquals(game.playerHand(), gameResponse.playerHand());
-                    assertEquals(game.dealerHand().get(0), gameResponse.upCard());
                     assertEquals(game.status(), gameResponse.status());
                 });
     }

@@ -1,5 +1,6 @@
 package game.application.domain.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -7,11 +8,25 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+
 
 public class PlayerHitTest {
 
     Game game;
+    Deck emptyDeck;
+    GameID gameID;
+    PlayerName name;
+    Hand emptyHand;
+    GameStatus inProgressStatus;
+
+    @BeforeEach
+    void setUp(){
+        emptyDeck = Deck.from(new LinkedHashSet<>());
+        gameID = new GameID(UUID.randomUUID());
+        name = PlayerName.of("Pepito");
+        emptyHand = Hand.from(new LinkedHashSet<Card>());
+        inProgressStatus = GameStatus.IN_PROGRESS;
+    }
 
     @Test
     void shouldDealOneCardToPlayer(){
@@ -21,13 +36,21 @@ public class PlayerHitTest {
                         new Card(Suit.CLUBS, Value.SIX),
                         new Card(Suit.CLUBS, Value.JACK)
                 )));
+
         Deck deck = Deck.from(new LinkedHashSet<>(
                 List.of(
-                new Card(Suit.CLUBS, Value.TWO),
-                new Card(Suit.HEARTS, Value.NINE)
-        )));
-        //todo change any()s
-        game = Game.from(any(), any(), deck, playerHand, any(), GameStatus.IN_PROGRESS);
+                        new Card(Suit.SPADES, Value.ACE),
+                        new Card(Suit.CLUBS, Value.ACE)
+                )
+        ));
+
+        game = Game.from(
+                gameID,
+                name,
+                deck,
+                playerHand,
+                emptyHand,
+                inProgressStatus);
 
         game.playerHit();
 
@@ -42,14 +65,15 @@ public class PlayerHitTest {
                         new Card(Suit.CLUBS, Value.ACE),
                         new Card(Suit.CLUBS, Value.JACK)
                 )));
-        Deck deck = Deck.from(new LinkedHashSet<>(
-                List.of(
-                        new Card(Suit.CLUBS, Value.TWO),
-                        new Card(Suit.HEARTS, Value.NINE)
-                )));
 
-        //Todo: change any()
-        game = Game.from(UUID.randomUUID(), PlayerName.of("Pepito"), deck, playerHand, any(), GameStatus.IN_PROGRESS);
+        game = Game.from(
+                gameID,
+                name,
+                emptyDeck,
+                playerHand,
+                emptyHand,
+                inProgressStatus
+        );
 
         assertEquals(2, game.playerHand().size());
 
@@ -57,13 +81,15 @@ public class PlayerHitTest {
 
     @Test
     void shouldNotDealCardIfGameIsNotInProgress(){
-        Hand playerHand = Hand.from(new LinkedHashSet<>(
-                List.of(
-                        new Card(Suit.CLUBS, Value.TWO),
-                        new Card(Suit.CLUBS, Value.FOUR)
-                )));
-        //todo change any()s
-        game = Game.from(any(), any(), any(), playerHand, any(), GameStatus.PLAYER_WON);
+
+        game = Game.from(
+                gameID,
+                name,
+                emptyDeck,
+                emptyHand,
+                emptyHand,
+                GameStatus.PLAYER_WON
+        );
 
         assertThrows(IllegalStateException.class,
                 () -> game.playerHit());
@@ -92,8 +118,16 @@ public class PlayerHitTest {
                         new Card(Suit.CLUBS, Value.ACE)
                 )
         ));
-        //todo change any()s
-        Game game = Game.from(any(), any(), deck, playerHand, dealerHand, GameStatus.IN_PROGRESS);
+
+        game = Game.from(
+                gameID,
+                name,
+                deck,
+                playerHand,
+                dealerHand,
+                inProgressStatus
+        );
+
         game.playerHit();
 
         assertEquals(GameStatus.PUSH, game.status());

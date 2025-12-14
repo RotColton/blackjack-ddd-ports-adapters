@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Game extends AbstractAggregateRoot<Game> {
 
-    private final UUID id;
+    private final GameID id;
     private final PlayerName playerName;
     private final Deck deck;
     private final Hand playerHand;
@@ -18,7 +18,7 @@ public class Game extends AbstractAggregateRoot<Game> {
     private GameStatus status;
 
     private Game(
-            UUID id,
+            GameID id,
             PlayerName playerName,
             Deck deck,
             Hand playerHand,
@@ -40,7 +40,7 @@ public class Game extends AbstractAggregateRoot<Game> {
         Hand playerHand = new Hand(new LinkedHashSet<Card>());
         Hand dealerHand = new Hand(new LinkedHashSet<Card>());
 
-        Game game = new Game(UUID.randomUUID(),
+        Game game = new Game(new GameID(UUID.randomUUID()),
                 playerName,
                 deck,
                 playerHand,
@@ -144,7 +144,7 @@ public class Game extends AbstractAggregateRoot<Game> {
         return this;
     }
 
-    public UUID id() {
+    public GameID id() {
         return this.id;
     }
 
@@ -169,7 +169,7 @@ public class Game extends AbstractAggregateRoot<Game> {
     }
 
     public static Game from(
-            UUID id,
+            GameID id,
             PlayerName playerName,
             Deck deck,
             Hand playerHand,

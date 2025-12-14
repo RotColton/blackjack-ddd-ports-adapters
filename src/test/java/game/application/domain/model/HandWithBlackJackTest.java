@@ -1,5 +1,6 @@
 package game.application.domain.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -75,6 +76,12 @@ public class HandWithBlackJackTest {
         );
     }
 
+    Hand hand;
+
+    @BeforeEach
+    void setUp(){
+        hand = new Hand(new LinkedHashSet<>());
+    }
 
     @ParameterizedTest
     @MethodSource("blackJackHandsWithTwoCards")
@@ -82,7 +89,6 @@ public class HandWithBlackJackTest {
         Card card1 = new Card(Suit.SPADES, v1);
         Card card2 = new Card(Suit.HEARTS, v2);
 
-        Hand hand = new Hand(new LinkedHashSet<>());
         hand.addCard(card1);
         hand.addCard(card2);
 
@@ -93,7 +99,6 @@ public class HandWithBlackJackTest {
     @ParameterizedTest
     @MethodSource("blackJackHandsWithThreeCards")
     void WithThreeCardsShouldHaveBlackJack(Value v1, Value v2, Value v3) {
-        Hand hand = new Hand(new LinkedHashSet<>());
 
         hand.addCard(new Card(Suit.SPADES, v1));
         hand.addCard(new Card(Suit.HEARTS, v2));
@@ -106,7 +111,6 @@ public class HandWithBlackJackTest {
     @ParameterizedTest
     @MethodSource("blackJackHandsWithFourCards")
     void WithFourCardsShouldHaveBlackJack(Value v1, Value v2, Value v3, Value v4) {
-        Hand hand = new Hand(new LinkedHashSet<>());
 
         hand.addCard(new Card(Suit.SPADES, v1));
         hand.addCard(new Card(Suit.HEARTS, v2));
@@ -121,7 +125,6 @@ public class HandWithBlackJackTest {
     @ParameterizedTest
     @MethodSource("blackJackHandsWithFiveCards")
     void WithFiveCardsShouldHaveBlackJack(Value v1, Value v2, Value v3, Value v4, Value v5) {
-        Hand hand = new Hand(new LinkedHashSet<>());
 
         hand.addCard(new Card(Suit.SPADES, v1));
         hand.addCard(new Card(Suit.HEARTS, v2));
