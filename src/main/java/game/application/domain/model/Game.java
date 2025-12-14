@@ -82,13 +82,13 @@ public class Game extends AbstractAggregateRoot<Game> {
 
         if(isPlayerBust()) return playerLoses();
 
-        if(hasPlayerBlackJack()) return dealerHit();
+        if(hasPlayerBlackJack()) return resolveGame();
 
         return this;
 
     }
 
-    public Game dealerHit(){
+    public Game resolveGame(){
 
         while(dealerHand.score() < 17)
             dealDealerCards();
@@ -99,9 +99,9 @@ public class Game extends AbstractAggregateRoot<Game> {
     }
 
     public Game playerStand(){
-        if(status != GameStatus.IN_PROGRESS)
-            throw new IllegalStateException(CANNOT_STAND);
-        return dealerHit();
+        if(status != GameStatus.IN_PROGRESS) throw new IllegalStateException(CANNOT_STAND);
+
+        return resolveGame();
     }
 
     public Game resolveGameOutcome(){
@@ -141,10 +141,7 @@ public class Game extends AbstractAggregateRoot<Game> {
 
     }
 
-    public Game endInPush(){
-        status = GameStatus.PUSH;
-        return this;
-    }
+    public Game endInPush(){ status = GameStatus.PUSH; return this; }
 
     public GameID id() {
         return this.id;

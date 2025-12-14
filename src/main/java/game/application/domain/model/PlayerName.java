@@ -2,12 +2,15 @@ package game.application.domain.model;
 
 public record PlayerName(String name) {
 
+    public static final String PLAYER_NAME_CANNOT_BE_BLANK = "Player name cannot be blank";
+    public static final String PLAYER_NAME_SIZE_CONSTRAINT = "Player name must be between 3 and 9 characters";
+
     private static void validate(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Player name cannot be blank");
+            throw new IllegalArgumentException(PLAYER_NAME_CANNOT_BE_BLANK);
         }
         if (name.length() < 3 || name.length() > 9) {
-            throw new IllegalArgumentException("Player name must be between 3 and 9 characters");
+            throw new IllegalArgumentException(PLAYER_NAME_SIZE_CONSTRAINT);
         }
     }
 
