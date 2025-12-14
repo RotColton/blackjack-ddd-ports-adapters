@@ -11,6 +11,6 @@ public record GameResponse(
         UUID gameID,
         PlayerName playerName,
         List<Card> playerHand,
-        Card upCard,
+        List<Card> dealerHand,
         GameStatus status
 ) {}

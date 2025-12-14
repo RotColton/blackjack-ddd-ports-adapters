@@ -11,10 +11,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.client.RestTestClient;
-
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
@@ -36,8 +36,8 @@ public class StartGameRestAdapterTest {
 
         request = new StartGameRequest("Pepito");
         game = Game.start(PlayerName.of("Pepito"));
-        when(useCase.startGame(
-                new StartGameCommand(PlayerName.of("Pepito")))).thenReturn(game);
+
+        when(useCase.startGame(any(StartGameCommand.class))).thenReturn(game);
 
         restTestClient.post().uri("/games/start")
                 .body(request)
@@ -67,7 +67,7 @@ public class StartGameRestAdapterTest {
                 .isBadRequest();
     }
 
-    static Stream<String> invalidPlayerNames() {
+   static Stream<String> invalidPlayerNames() {
         return Stream.of(
                 null,
                 "",

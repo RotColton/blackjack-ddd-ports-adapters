@@ -26,11 +26,11 @@ public class PlayerHitRestAdapterTest {
 
     @BeforeEach
     void setUp(){
+        //Todo: Mocking methods declared on non-public parent classes is not supported.
         useCase = Mockito.mock(PlayerHitUseCase.class);
         restTestClient = RestTestClient.bindToController(new PlayerHitRestAdapter(useCase)).build();
     }
 
-    //Todo: create game with from()
     @Test
     void shouldPlayerHitAndReturn200() {
 

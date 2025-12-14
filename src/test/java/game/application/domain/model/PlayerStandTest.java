@@ -65,6 +65,7 @@ public class PlayerStandTest {
                 )
         ));
 
+        //Todo: change any()
         Game game = Game.from(
                 UUID.randomUUID(),
                 PlayerName.of("Pepito"),
@@ -95,7 +96,7 @@ public class PlayerStandTest {
                         new Card(Suit.CLUBS, Value.SEVEN)
                 )
         ));
-
+//Todo: change any()
         Game game = Game.from(
                 UUID.randomUUID(),
                 PlayerName.of("Pepito"),

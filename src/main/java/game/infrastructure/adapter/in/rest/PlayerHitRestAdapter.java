@@ -2,12 +2,12 @@ package game.infrastructure.adapter.in.rest;
 
 import game.application.domain.model.Game;
 import game.application.domain.model.GameID;
+import game.application.domain.model.GameStatus;
 import game.application.in.PlayerHitCommand;
 import game.application.in.PlayerHitUseCase;
 import game.infrastructure.adapter.in.rest.mapper.GameRestMapper;
 import game.infrastructure.adapter.in.rest.response.GameResponse;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,12 +25,16 @@ public class PlayerHitRestAdapter {
 
     @PutMapping("/hit")
     public ResponseEntity<GameResponse> hit(
-            @Valid @RequestParam UUID gameId) {
-
+            @Valid @RequestParam UUID gameId
+            ){
         Game game = useCase.hit(
                 new PlayerHitCommand(new GameID(gameId)));
 
-        return ResponseEntity.status(HttpStatus.OK).body(GameRestMapper.toResponse(game));
+        GameResponse response = game.status() == GameStatus.IN_PROGRESS
+                ? GameRestMapper.toUpcardGameResponse(game)
+                : GameRestMapper.toResolvedGameResponse(game);
+
+        return ResponseEntity.ok(response);
 
     }
 }

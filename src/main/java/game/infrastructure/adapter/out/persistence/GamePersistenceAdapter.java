@@ -4,15 +4,15 @@ import game.application.domain.model.*;
 import game.application.out.GameOutputPort;
 import game.infrastructure.adapter.out.persistence.mapper.GamePersistenceMapper;
 import org.springframework.stereotype.Component;
-
 import java.util.Optional;
+
+import static game.infrastructure.adapter.out.persistence.mapper.GamePersistenceMapper.*;
 
 
 @Component
 public class GamePersistenceAdapter implements GameOutputPort {
 
     private final GameMongoRepository repository;
-    private GamePersistenceMapper mapper;
 
     public GamePersistenceAdapter(GameMongoRepository repository) {
         this.repository = repository;
@@ -20,7 +20,7 @@ public class GamePersistenceAdapter implements GameOutputPort {
 
     @Override
     public Game save(Game game) {
-        return mapper.toDomain(repository.save(mapper.toDocument(game)));
+        return toDomain(repository.save(toDocument(game)));
     }
 
     @Override
@@ -29,15 +29,15 @@ public class GamePersistenceAdapter implements GameOutputPort {
     }
 
     @Override
-    public Optional<Game> getGameByPlayerName(PlayerName name) {
-        return repository.findByPlayerName(name.name())
-                .map(mapper::toDomain);
+    public Optional<Game> getGameByPlayerName(PlayerName playerName) {
+        return repository.findByPlayerName(playerName.name())
+                .map(GamePersistenceMapper::toDomain);
     }
 
     @Override
     public Optional<Game> getGameById(GameID gameID) {
         return repository.findById(gameID.id().toString())
-                .map(mapper::toDomain);
+                .map(GamePersistenceMapper::toDomain);
     }
 
 }

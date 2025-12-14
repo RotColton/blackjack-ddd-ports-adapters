@@ -2,6 +2,5 @@ package game.application.in;
 
 import game.application.domain.model.GameID;
 
-public record PlayerHitCommand(
-        GameID gameID
-) {}
+public record PlayerStandCommand(GameID gameID) {
+}

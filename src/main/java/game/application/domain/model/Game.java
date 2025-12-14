@@ -49,7 +49,7 @@ public class Game extends AbstractAggregateRoot<Game> {
 
         game.dealOpeningCards();
 
-        if(game.hasPlayerBlackJack()) game.playerWins();
+        if(game.hasPlayerBlackJack()) return game.playerWins();
 
         return game;
     }
@@ -73,8 +73,8 @@ public class Game extends AbstractAggregateRoot<Game> {
 
     public Game playerHit(){
 
-        if(status != GameStatus.IN_PROGRESS || playerHand.score() >= 21)
-            throw new IllegalStateException("Cannot hit!");
+        if(status != GameStatus.IN_PROGRESS)
+            throw new IllegalStateException("Cannot hit: the game is not in progress");
 
         dealPlayerCards();
 
@@ -96,8 +96,10 @@ public class Game extends AbstractAggregateRoot<Game> {
         return resolveGameOutcome();
     }
 
-    public void playerStand(){
-        dealerHit();
+    public Game playerStand(){
+        if(status != GameStatus.IN_PROGRESS)
+            throw new IllegalStateException("Cannot stand: the game is not in progress");
+        return dealerHit();
     }
 
     public Game resolveGameOutcome(){
