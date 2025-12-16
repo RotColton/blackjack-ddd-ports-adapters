@@ -18,6 +18,19 @@ jobs:
         with:
           java-version: 21
           distribution: 'temurin'
+      - name: Generate modern JaCoCo report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.26
+        with:
+          reports: target/site/jacoco/jacoco.xml
+          targetdir: target/site/jacoco
+          reporttypes: HtmlInline_AzurePipelines_Light
+      - name: Deploy JaCoCo to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/site/jacoco
+          publish_branch: gh-pages
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
