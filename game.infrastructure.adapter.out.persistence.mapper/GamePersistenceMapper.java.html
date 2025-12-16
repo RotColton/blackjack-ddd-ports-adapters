@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GamePersistenceMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blackjack-ddd-ports-adapters</a> &gt; <a href="index.source.html" class="el_package">game.infrastructure.adapter.out.persistence.mapper</a> &gt; <span class="el_source">GamePersistenceMapper.java</span></div><h1>GamePersistenceMapper.java</h1><pre class="source lang-java linenums">package game.infrastructure.adapter.out.persistence.mapper;
+
+import game.application.domain.model.*;
+import game.infrastructure.adapter.out.persistence.GameDocument;
+import java.util.LinkedHashSet;
+import java.util.UUID;
+
+<span class="nc" id="L8">public class GamePersistenceMapper {</span>
+
+    public static GameDocument toDocument(Game game) {
+<span class="nc" id="L11">        return GameDocument.builder()</span>
+<span class="nc" id="L12">                .id(game.id().id().toString())</span>
+<span class="nc" id="L13">                .deck(game.deck())</span>
+<span class="nc" id="L14">                .playerName(game.playerName().name())</span>
+<span class="nc" id="L15">                .playerHand(game.playerHand())</span>
+<span class="nc" id="L16">                .dealerHand(game.dealerHand())</span>
+<span class="nc" id="L17">                .status(game.status())</span>
+<span class="nc" id="L18">                .build();</span>
+    }
+
+    public static Game toDomain(GameDocument document) {
+<span class="nc" id="L22">        return Game.from(</span>
+<span class="nc" id="L23">                new GameID(UUID.fromString(document.getId())),</span>
+<span class="nc" id="L24">                PlayerName.of(document.getPlayerName()),</span>
+<span class="nc" id="L25">                Deck.from(new LinkedHashSet&lt;&gt;((document.getDeck()))),</span>
+<span class="nc" id="L26">                Hand.from(new LinkedHashSet&lt;&gt;(document.getPlayerHand())),</span>
+<span class="nc" id="L27">                Hand.from(new LinkedHashSet&lt;&gt;(document.getDealerHand())),</span>
+<span class="nc" id="L28">                document.getStatus());</span>
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

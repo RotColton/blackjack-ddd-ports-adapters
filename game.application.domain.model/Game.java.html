@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blackjack-ddd-ports-adapters</a> &gt; <a href="index.source.html" class="el_package">game.application.domain.model</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">package game.application.domain.model;
+
+
+import game.application.domain.event.PlayerLosesEvent;
+import game.application.domain.event.PlayerWinsEvent;
+import org.springframework.data.domain.AbstractAggregateRoot;
+
+import java.util.*;
+
+
+public class Game extends AbstractAggregateRoot&lt;Game&gt; {
+
+    public static final String CANNOT_STAND = &quot;Cannot stand: the game is not in progress&quot;;
+    public static final String CANNOT_HIT = &quot;Cannot hit: the game is not in progress&quot;;
+    private final GameID id;
+    private final PlayerName playerName;
+    private final Deck deck;
+    private final Hand playerHand;
+    private final Hand dealerHand;
+    private GameStatus status;
+
+    private Game(
+            GameID id,
+            PlayerName playerName,
+            Deck deck,
+            Hand playerHand,
+            Hand dealerHand,
+            GameStatus status
+<span class="fc" id="L29">    ) {</span>
+<span class="fc" id="L30">        this.id = id;</span>
+<span class="fc" id="L31">        this.playerName = playerName;</span>
+<span class="fc" id="L32">        this.deck = deck;</span>
+<span class="fc" id="L33">        this.playerHand = playerHand;</span>
+<span class="fc" id="L34">        this.dealerHand = dealerHand;</span>
+<span class="fc" id="L35">        this.status = status;</span>
+<span class="fc" id="L36">    }</span>
+
+    public static Game start(PlayerName playerName) {
+
+<span class="fc" id="L40">        Deck deck = Deck.shuffle();</span>
+
+<span class="fc" id="L42">        Hand playerHand = new Hand(new LinkedHashSet&lt;Card&gt;());</span>
+<span class="fc" id="L43">        Hand dealerHand = new Hand(new LinkedHashSet&lt;Card&gt;());</span>
+
+<span class="fc" id="L45">        Game game = new Game(new GameID(UUID.randomUUID()),</span>
+                playerName,
+                deck,
+                playerHand,
+                dealerHand,
+                GameStatus.IN_PROGRESS);
+
+<span class="fc" id="L52">        game.dealOpeningCards();</span>
+
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if(game.hasPlayerBlackJack()) return game.playerWins();</span>
+
+<span class="fc" id="L56">        return game;</span>
+    }
+
+    private void dealOpeningCards() {
+<span class="fc" id="L60">        dealPlayerCards();</span>
+<span class="fc" id="L61">        dealDealerCards();</span>
+<span class="fc" id="L62">        dealPlayerCards();</span>
+<span class="fc" id="L63">        dealDealerCards();</span>
+<span class="fc" id="L64">    }</span>
+
+    private void dealDealerCards() {
+<span class="fc" id="L67">        dealerHand.addCard(deck.drawCard());</span>
+<span class="fc" id="L68">    }</span>
+
+<span class="fc" id="L70">    private void dealPlayerCards() { playerHand.addCard(deck.drawCard()); }</span>
+
+    public boolean hasPlayerBlackJack() {
+<span class="fc" id="L73">        return playerHand.isBlackJack();</span>
+    }
+
+    public Game playerHit(){
+
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if(status != GameStatus.IN_PROGRESS)</span>
+<span class="fc" id="L79">            throw new IllegalStateException(CANNOT_HIT);</span>
+
+<span class="fc" id="L81">        dealPlayerCards();</span>
+
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if(isPlayerBust()) return playerLoses();</span>
+
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if(hasPlayerBlackJack()) return resolveGame();</span>
+
+<span class="fc" id="L87">        return this;</span>
+
+    }
+
+    public Game resolveGame(){
+
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        while(dealerHand.score() &lt; 17)</span>
+<span class="fc" id="L94">            dealDealerCards();</span>
+
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (isDealerBust()){ return playerWins(); }</span>
+
+<span class="fc" id="L98">        return resolveGameOutcome();</span>
+    }
+
+    public Game playerStand(){
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if(status != GameStatus.IN_PROGRESS) throw new IllegalStateException(CANNOT_STAND);</span>
+
+<span class="fc" id="L104">        return resolveGame();</span>
+    }
+
+    public Game resolveGameOutcome(){
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if(playerHand.score() == dealerHand.score()) return endInPush();</span>
+
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if(playerHand.score() &gt; dealerHand.score()) return playerWins();</span>
+
+<span class="fc" id="L112">        return playerLoses();</span>
+    }
+
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">    public boolean isPlayerBust() { return playerHand.score() &gt; 21; }</span>
+
+<span class="fc bfc" id="L117" title="All 2 branches covered.">    public boolean isDealerBust() { return dealerHand.score() &gt; 21; }</span>
+
+    private Game playerLoses() {
+<span class="fc" id="L120">        registerEvent(new PlayerLosesEvent(</span>
+<span class="fc" id="L121">                id(),</span>
+<span class="fc" id="L122">                playerName().name(),</span>
+<span class="fc" id="L123">                playerHand(),</span>
+<span class="fc" id="L124">                playerHand.score()));</span>
+
+<span class="fc" id="L126">        status = GameStatus.DEALER_WON;</span>
+
+<span class="fc" id="L128">        return this;</span>
+    }
+
+    private Game playerWins(){
+<span class="fc" id="L132">        registerEvent(new PlayerWinsEvent(</span>
+<span class="fc" id="L133">                id(),</span>
+<span class="fc" id="L134">                playerName().name(),</span>
+<span class="fc" id="L135">                playerHand(),</span>
+<span class="fc" id="L136">                playerHand.score()));</span>
+
+<span class="fc" id="L138">        status = GameStatus.PLAYER_WON;</span>
+
+<span class="fc" id="L140">        return this;</span>
+
+    }
+
+<span class="fc" id="L144">    public Game endInPush(){ status = GameStatus.PUSH; return this; }</span>
+
+    public GameID id() {
+<span class="fc" id="L147">        return this.id;</span>
+    }
+
+    public PlayerName playerName() {
+<span class="fc" id="L151">        return this.playerName;</span>
+    }
+
+    public List&lt;Card&gt; playerHand() {
+<span class="fc" id="L155">        return List.copyOf(playerHand.cards());</span>
+    }
+
+    public List&lt;Card&gt; dealerHand() {
+<span class="fc" id="L159">        return List.copyOf(dealerHand.cards());</span>
+    }
+
+    public List&lt;Card&gt; deck() {
+<span class="fc" id="L163">        return List.copyOf(deck.asList());</span>
+    }
+
+    public GameStatus status() {
+<span class="fc" id="L167">        return this.status;</span>
+    }
+
+    public static Game from(
+            GameID id,
+            PlayerName playerName,
+            Deck deck,
+            Hand playerHand,
+            Hand dealerHand,
+            GameStatus status) {
+
+<span class="fc" id="L178">        return new Game(</span>
+                id,
+                playerName,
+                deck,
+                playerHand,
+                dealerHand,
+                status);
+    }
+
+    public Collection&lt;Object&gt; events(){
+<span class="nc" id="L188">        return List.copyOf(super.domainEvents());</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

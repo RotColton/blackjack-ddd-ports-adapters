@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Value.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blackjack-ddd-ports-adapters</a> &gt; <a href="index.source.html" class="el_package">game.application.domain.model</a> &gt; <span class="el_source">Value.java</span></div><h1>Value.java</h1><pre class="source lang-java linenums">package game.application.domain.model;
+
+<span class="fc" id="L3">public enum Value {</span>
+<span class="fc" id="L4">    ACE(1),</span>
+<span class="fc" id="L5">    TWO(2),</span>
+<span class="fc" id="L6">    THREE(3),</span>
+<span class="fc" id="L7">    FOUR(4),</span>
+<span class="fc" id="L8">    FIVE(5),</span>
+<span class="fc" id="L9">    SIX(6),</span>
+<span class="fc" id="L10">    SEVEN(7),</span>
+<span class="fc" id="L11">    EIGHT(8),</span>
+<span class="fc" id="L12">    NINE(9),</span>
+<span class="fc" id="L13">    TEN(10),</span>
+<span class="fc" id="L14">    JACK(10),</span>
+<span class="fc" id="L15">    QUEEN(10),</span>
+<span class="fc" id="L16">    KING(10);</span>
+
+    private final int points;
+
+<span class="fc" id="L20">    Value(int points) {</span>
+<span class="fc" id="L21">        this.points = points;</span>
+<span class="fc" id="L22">    }</span>
+
+    public int getPoints() {
+<span class="fc" id="L25">        return points;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
