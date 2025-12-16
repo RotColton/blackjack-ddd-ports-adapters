@@ -18,6 +18,8 @@ jobs:
         with:
           java-version: 21
           distribution: 'temurin'
+      - name: Build and Test with Maven
+        run: mvn -B clean verify test
       - name: Generate modern JaCoCo report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.1.26
         with:
