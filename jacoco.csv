@@ -10,9 +10,8 @@ blackjack-ddd-ports-adapters,game.application.domain.service,StartGameService,18
 blackjack-ddd-ports-adapters,game.infrastructure.adapter.in.rest.response,GameResponse,0,18,0,0,0,1,0,1,0,1
 blackjack-ddd-ports-adapters,game.application.domain.exception,GameNotFoundException,4,0,0,0,2,0,1,0,1,0
 blackjack-ddd-ports-adapters,game.infrastructure.adapter.out.persistence.mapper,GamePersistenceMapper,58,0,0,0,16,0,3,0,3,0
-blackjack-ddd-ports-adapters,game.application.domain.event,PlayerWinsEvent,0,15,0,0,0,1,0,1,0,1
-blackjack-ddd-ports-adapters,game.application.domain.event,PlayerLosesEvent,0,15,0,0,0,1,0,1,0,1
-blackjack-ddd-ports-adapters,game.application.domain.model,Game,14,253,3,19,1,63,4,30,1,22
+blackjack-ddd-ports-adapters,game.application.domain.event,GameFinishedEvent,0,18,0,0,0,1,0,1,0,1
+blackjack-ddd-ports-adapters,game.application.domain.model,Game,20,236,3,19,2,56,5,28,2,20
 blackjack-ddd-ports-adapters,game.application.domain.model,Hand,0,68,0,8,0,15,0,11,0,7
 blackjack-ddd-ports-adapters,game.application.domain.model,GameID,0,6,0,0,0,1,0,1,0,1
 blackjack-ddd-ports-adapters,game.application.domain.model,PlayerName,0,37,0,8,0,8,0,7,0,3
@@ -22,7 +21,7 @@ blackjack-ddd-ports-adapters,game.application.domain.model,Value,0,105,0,0,0,18,
 blackjack-ddd-ports-adapters,game.application.domain.model,Deck,4,60,0,0,1,13,1,7,1,7
 blackjack-ddd-ports-adapters,game.application.domain.model,Suit,0,27,0,0,0,5,0,1,0,1
 blackjack-ddd-ports-adapters,game.infrastructure.adapter.in.rest.mapper,GameRestMapper,3,32,0,0,1,12,1,2,1,2
-blackjack-ddd-ports-adapters,game.infrastructure.adapter.out.persistence,GamePersistenceAdapter,33,6,0,0,6,3,4,1,4,1
+blackjack-ddd-ports-adapters,game.infrastructure.adapter.out.persistence,GamePersistenceAdapter,34,6,0,0,6,3,4,1,4,1
 blackjack-ddd-ports-adapters,game.infrastructure.adapter.in.rest,StartGameRestAdapter,2,27,1,1,0,9,1,2,0,2
 blackjack-ddd-ports-adapters,game.infrastructure.adapter.in.rest,PlayerStandRestAdapter,0,23,0,0,0,5,0,2,0,2
 blackjack-ddd-ports-adapters,game.infrastructure.adapter.in.rest,PlayerHitRestAdapter,2,28,1,1,0,8,1,2,0,2
