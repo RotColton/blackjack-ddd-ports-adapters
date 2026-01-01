@@ -11,7 +11,7 @@ blackjack-ddd-ports-adapters,game.infrastructure.adapter.in.rest.response,GameRe
 blackjack-ddd-ports-adapters,game.application.domain.exception,GameNotFoundException,4,0,0,0,2,0,1,0,1,0
 blackjack-ddd-ports-adapters,game.infrastructure.adapter.out.persistence.mapper,GamePersistenceMapper,58,0,0,0,16,0,3,0,3,0
 blackjack-ddd-ports-adapters,game.application.domain.event,GameFinishedEvent,0,18,0,0,0,1,0,1,0,1
-blackjack-ddd-ports-adapters,game.application.domain.model,Game,20,236,3,19,2,56,5,28,2,20
+blackjack-ddd-ports-adapters,game.application.domain.model,Game,24,232,4,18,2,56,6,27,2,20
 blackjack-ddd-ports-adapters,game.application.domain.model,Hand,0,68,0,8,0,15,0,11,0,7
 blackjack-ddd-ports-adapters,game.application.domain.model,GameID,0,6,0,0,0,1,0,1,0,1
 blackjack-ddd-ports-adapters,game.application.domain.model,PlayerName,0,37,0,8,0,8,0,7,0,3
