@@ -1,8 +1,7 @@
 package game.application.domain.model;
 
 
-import game.application.domain.event.PlayerLosesEvent;
-import game.application.domain.event.PlayerWinsEvent;
+import game.application.domain.event.GameFinishedEvent;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.util.*;
@@ -51,7 +50,7 @@ public class Game extends AbstractAggregateRoot<Game> {
 
         game.dealOpeningCards();
 
-        if(game.hasPlayerBlackJack()) return game.playerWins();
+        if(game.hasPlayerBlackJack()) return game.finishGame(GameStatus.PLAYER_WON);
 
         return game;
     }
@@ -80,65 +79,53 @@ public class Game extends AbstractAggregateRoot<Game> {
 
         dealPlayerCards();
 
-        if(isPlayerBust()) return playerLoses();
+        if(isPlayerBust()) return finishGame(GameStatus.DEALER_WON);
 
-        if(hasPlayerBlackJack()) return resolveGame();
+        if(hasPlayerBlackJack()) return resolveDealerTurn();
 
         return this;
 
     }
 
-    public Game resolveGame(){
+    public Game resolveDealerTurn(){
 
         while(dealerHand.score() < 17)
             dealDealerCards();
 
-        if (isDealerBust()){ return playerWins(); }
+        if (isDealerBust()) return finishGame(GameStatus.PLAYER_WON);
 
-        return resolveGameOutcome();
+        return resolveGame();
     }
 
     public Game playerStand(){
         if(status != GameStatus.IN_PROGRESS) throw new IllegalStateException(CANNOT_STAND);
 
-        return resolveGame();
+        return resolveDealerTurn();
     }
 
-    public Game resolveGameOutcome(){
-        if(playerHand.score() == dealerHand.score()) return endInPush();
+    public Game resolveGame(){
+        if(playerHand.score() == dealerHand.score()) return finishGame(GameStatus.PUSH);
 
-        if(playerHand.score() > dealerHand.score()) return playerWins();
+        if(playerHand.score() > dealerHand.score()) return finishGame(GameStatus.PLAYER_WON);
 
-        return playerLoses();
+        return finishGame(GameStatus.DEALER_WON);
     }
 
     public boolean isPlayerBust() { return playerHand.score() > 21; }
 
     public boolean isDealerBust() { return dealerHand.score() > 21; }
 
-    private Game playerLoses() {
-        registerEvent(new PlayerLosesEvent(
-                id(),
+    private Game finishGame(GameStatus status){
+        this.status = status;
+        registerEvent(new GameFinishedEvent(
+                id().id(),
                 playerName().name(),
-                playerHand(),
-                playerHand.score()));
-
-        status = GameStatus.DEALER_WON;
+                status.name(),
+                playerHand.score(),
+                dealerHand.score()
+        ));
 
         return this;
-    }
-
-    private Game playerWins(){
-        registerEvent(new PlayerWinsEvent(
-                id(),
-                playerName().name(),
-                playerHand(),
-                playerHand.score()));
-
-        status = GameStatus.PLAYER_WON;
-
-        return this;
-
     }
 
     public Game endInPush(){ status = GameStatus.PUSH; return this; }

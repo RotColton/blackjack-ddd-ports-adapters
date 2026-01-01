@@ -4,6 +4,8 @@ import game.application.domain.model.*;
 import game.application.out.GameQueryPort;
 import game.infrastructure.adapter.out.persistence.mapper.GamePersistenceMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
 import java.util.Optional;
 
 import static game.infrastructure.adapter.out.persistence.mapper.GamePersistenceMapper.*;
@@ -28,7 +30,7 @@ public class GamePersistenceAdapter implements GameQueryPort {
 
     @Override
     public Optional<Game> loadGame(PlayerName playerName) {
-        return repository.findByPlayerName(playerName.name())
+        return repository.findByPlayerNameAndStatus(playerName.name(), GameStatus.IN_PROGRESS)
                 .map(GamePersistenceMapper::toDomain);
     }
 
