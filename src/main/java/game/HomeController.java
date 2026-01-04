@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RefreshScope
 public class HomeController {
 
-    @Value("${app.testProp}")
+    @Value("${app.testProp: Default value}")
     private String testProp;
 
     @GetMapping("/")
