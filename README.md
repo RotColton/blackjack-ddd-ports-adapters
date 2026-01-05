@@ -38,7 +38,7 @@ The system is split into **independent microservices**, each representing a **Bo
 
 Communication between services is **asynchronous** and **event-driven**, using **Apache Kafka**.
 
-| Game BC | | Ranking BC |
+| Game BC | | Wallet BC |
 | :---: | :---: | :---: |
 | **Microservice** | $\xrightarrow{\text{Kafka Events}}$ | **Microservice** |
 | ⬇️ | | ⬇️ |
