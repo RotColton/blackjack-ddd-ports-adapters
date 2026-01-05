@@ -88,8 +88,8 @@ This context is **read-only** and fully **decoupled** from the Game BC.
 
 - Java 21
 - Maven
-- Docker (Kafka, Eureka, databases)
-- SonarQube (optional)
+- Docker (Kafka, RabbitMQ, MongoDB)
+- SonarQube
 
 ---
 
