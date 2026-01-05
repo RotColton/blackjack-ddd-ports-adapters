@@ -82,6 +82,21 @@ This context is **read-only** and fully **decoupled** from the Game BC.
 
 ---
 
+### Wallet Bounded Context
+
+Responsibilities:
+- Manage Player Balances: Maintain the current amount of money/tokens for each player.
+- Handle Transactions: Process deposits, withdrawals, and bets.
+- Bet Validation: Ensure a player has sufficient funds before allowing them to join a game or hit.
+- Payout Execution: Consume domain events from the Game BC (e.g., GameFinished, PlayerWon) to automatically credit winnings or settle bets.
+- Audit Log: Maintain a record of all financial movements for consistency and debugging.
+
+Persistence Rules:
+- Transactional Integrity: Every balance change must be atomic.
+- Source of Truth: This is the only context allowed to modify a player's balance.
+
+---
+
 ## Installation
 
 ### Prerequisites
