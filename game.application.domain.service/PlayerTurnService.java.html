@@ -6,6 +6,7 @@ import game.application.in.PlayerHitCommand;
 import game.application.in.PlayerHitUseCase;
 import game.application.in.PlayerStandCommand;
 import game.application.in.PlayerStandUseCase;
+import game.application.out.GameCommandPort;
 import game.application.out.GameQueryPort;
 import org.springframework.stereotype.Service;
 
@@ -13,33 +14,35 @@ import org.springframework.stereotype.Service;
 public class PlayerTurnService implements PlayerHitUseCase, PlayerStandUseCase {
 
     public static final String GAME_NOT_FOUND = &quot;Game not found&quot;;
-    private final GameQueryPort port;
+    private final GameQueryPort queryPort;
+    private final GameCommandPort commandPort;
 
-<span class="fc" id="L18">    public PlayerTurnService(GameQueryPort port) {</span>
-<span class="fc" id="L19">        this.port = port;</span>
-<span class="fc" id="L20">    }</span>
+<span class="fc" id="L20">    public PlayerTurnService(GameQueryPort queryPort, GameCommandPort commandPort) {</span>
+<span class="fc" id="L21">        this.queryPort = queryPort;</span>
+<span class="fc" id="L22">        this.commandPort = commandPort;</span>
+<span class="fc" id="L23">    }</span>
 
     @Override
     public Game hit(PlayerHitCommand command) {
-<span class="nc" id="L24">        return port.loadGame(command.gameID())</span>
-<span class="nc" id="L25">                .map(game -&gt; {</span>
-<span class="nc" id="L26">                    Game updatedGame = game.playerHit();</span>
-<span class="nc" id="L27">                    port.applyGameChanges(updatedGame);</span>
-<span class="nc" id="L28">                    return updatedGame;</span>
+<span class="nc" id="L27">        return queryPort.loadGame(command.gameID())</span>
+<span class="nc" id="L28">                .map(game -&gt; {</span>
+<span class="nc" id="L29">                    Game updatedGame = game.playerHit();</span>
+<span class="nc" id="L30">                    commandPort.applyGameChanges(updatedGame);</span>
+<span class="nc" id="L31">                    return updatedGame;</span>
                 })
-<span class="nc" id="L30">                .orElseThrow(() -&gt; new GameNotFoundException(GAME_NOT_FOUND));</span>
+<span class="nc" id="L33">                .orElseThrow(() -&gt; new GameNotFoundException(GAME_NOT_FOUND));</span>
     }
 
 
     @Override
     public Game stand(PlayerStandCommand command) {
-<span class="nc" id="L36">        return port.loadGame(command.gameID())</span>
-<span class="nc" id="L37">                .map(game -&gt;{</span>
-<span class="nc" id="L38">                    Game updatedGame = game.playerStand();</span>
-<span class="nc" id="L39">                    port.applyGameChanges(updatedGame);</span>
-<span class="nc" id="L40">                    return updatedGame;</span>
+<span class="nc" id="L39">        return queryPort.loadGame(command.gameID())</span>
+<span class="nc" id="L40">                .map(game -&gt;{</span>
+<span class="nc" id="L41">                    Game updatedGame = game.playerStand();</span>
+<span class="nc" id="L42">                    commandPort.applyGameChanges(updatedGame);</span>
+<span class="nc" id="L43">                    return updatedGame;</span>
                 })
-<span class="nc" id="L42">                .orElseThrow(() -&gt; new GameNotFoundException(GAME_NOT_FOUND));</span>
+<span class="nc" id="L45">                .orElseThrow(() -&gt; new GameNotFoundException(GAME_NOT_FOUND));</span>
     }
 }
 

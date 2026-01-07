@@ -3,6 +3,7 @@
 import game.application.in.StartGameCommand;
 import game.application.in.StartGameUseCase;
 import game.application.domain.model.Game;
+import game.application.out.GameCommandPort;
 import game.application.out.GameQueryPort;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +11,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class StartGameService implements StartGameUseCase {
 
-    private final GameQueryPort port;
+    private final GameCommandPort commandPort;
+    private final GameQueryPort queryPort;
 
-<span class="fc" id="L15">    public StartGameService(GameQueryPort port) {</span>
-<span class="fc" id="L16">        this.port = port;</span>
-<span class="fc" id="L17">    }</span>
+<span class="fc" id="L17">    public StartGameService(GameCommandPort commandPort, GameQueryPort queryPort) {</span>
+<span class="fc" id="L18">        this.commandPort = commandPort;</span>
+<span class="fc" id="L19">        this.queryPort = queryPort;</span>
+<span class="fc" id="L20">    }</span>
 
     @Override
     public Game startGame(StartGameCommand command) {
-<span class="nc" id="L21">        return port.loadGame(command.playerName())</span>
-<span class="nc" id="L22">                .orElseGet(() -&gt; port.addGame(Game.start(command.playerName())));</span>
+<span class="nc" id="L24">        return queryPort.loadGame(command.playerName())</span>
+<span class="nc" id="L25">                .orElseGet(() -&gt; commandPort.addGame(Game.start(command.playerName())));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

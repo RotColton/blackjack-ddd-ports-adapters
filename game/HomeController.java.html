@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
     @Value(&quot;${app.testProp: Default value}&quot;)
     private String testProp;
 
-    @GetMapping(&quot;/&quot;)
+    @GetMapping(&quot;/prop&quot;)
     public String hello(){
 <span class="nc" id="L17">        return testProp;</span>
     }
