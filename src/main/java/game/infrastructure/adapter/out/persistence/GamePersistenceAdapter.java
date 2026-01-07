@@ -1,18 +1,18 @@
 package game.infrastructure.adapter.out.persistence;
 
 import game.application.domain.model.*;
+import game.application.out.GameCommandPort;
 import game.application.out.GameQueryPort;
 import game.infrastructure.adapter.out.persistence.mapper.GamePersistenceMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import static game.infrastructure.adapter.out.persistence.mapper.GamePersistenceMapper.*;
 
 
 @Component
-public class GamePersistenceAdapter implements GameQueryPort {
+public class GamePersistenceAdapter implements GameQueryPort, GameCommandPort {
 
     private final GameMongoRepository repository;
 

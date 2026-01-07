@@ -6,6 +6,7 @@ import game.application.in.PlayerHitCommand;
 import game.application.in.PlayerHitUseCase;
 import game.application.in.PlayerStandCommand;
 import game.application.in.PlayerStandUseCase;
+import game.application.out.GameCommandPort;
 import game.application.out.GameQueryPort;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +14,20 @@ import org.springframework.stereotype.Service;
 public class PlayerTurnService implements PlayerHitUseCase, PlayerStandUseCase {
 
     public static final String GAME_NOT_FOUND = "Game not found";
-    private final GameQueryPort port;
+    private final GameQueryPort queryPort;
+    private final GameCommandPort commandPort;
 
-    public PlayerTurnService(GameQueryPort port) {
-        this.port = port;
+    public PlayerTurnService(GameQueryPort queryPort, GameCommandPort commandPort) {
+        this.queryPort = queryPort;
+        this.commandPort = commandPort;
     }
 
     @Override
     public Game hit(PlayerHitCommand command) {
-        return port.loadGame(command.gameID())
+        return queryPort.loadGame(command.gameID())
                 .map(game -> {
                     Game updatedGame = game.playerHit();
-                    port.applyGameChanges(updatedGame);
+                    commandPort.applyGameChanges(updatedGame);
                     return updatedGame;
                 })
                 .orElseThrow(() -> new GameNotFoundException(GAME_NOT_FOUND));
@@ -33,10 +36,10 @@ public class PlayerTurnService implements PlayerHitUseCase, PlayerStandUseCase {
 
     @Override
     public Game stand(PlayerStandCommand command) {
-        return port.loadGame(command.gameID())
+        return queryPort.loadGame(command.gameID())
                 .map(game ->{
                     Game updatedGame = game.playerStand();
-                    port.applyGameChanges(updatedGame);
+                    commandPort.applyGameChanges(updatedGame);
                     return updatedGame;
                 })
                 .orElseThrow(() -> new GameNotFoundException(GAME_NOT_FOUND));

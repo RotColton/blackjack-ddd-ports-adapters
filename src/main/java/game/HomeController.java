@@ -12,7 +12,7 @@ public class HomeController {
     @Value("${app.testProp: Default value}")
     private String testProp;
 
-    @GetMapping("/")
+    @GetMapping("/prop")
     public String hello(){
         return testProp;
     }
